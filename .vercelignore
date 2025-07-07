@@ -1,0 +1,19 @@
+# Backend files (not needed in Vercel)
+server.js
+render.yaml
+scores.json
+
+# Development files
+node_modules/
+*.log
+.env
+.DS_Store
+
+# Documentation not needed in production
+DEPLOYMENT_TUTORIAL.md
+deploy.md
+
+# Network scripts (for local development only)
+start-network.bat
+start-network.sh
+find-ip.js 

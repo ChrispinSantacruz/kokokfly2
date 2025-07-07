@@ -16,6 +16,15 @@ class LeaderboardsManager {
       return 'http://localhost:3000/api';
     }
     
+    // Si estamos en Vercel u otro hosting (production), usar Render backend
+    if (window.location.hostname.includes('vercel.app') || 
+        window.location.hostname.includes('netlify.app') ||
+        window.location.hostname.includes('github.io') ||
+        window.location.protocol === 'https:') {
+      // 🚀 CAMBIAR ESTA URL POR LA DE TU BACKEND EN RENDER
+      return 'https://tu-backend-render.onrender.com/api';
+    }
+    
     // Si estamos en red local, usar la IP del servidor
     const protocol = window.location.protocol; // http: o https:
     const hostname = window.location.hostname; // IP del servidor
