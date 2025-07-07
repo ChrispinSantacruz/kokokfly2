@@ -8,7 +8,7 @@
     "dev": "node server.js",
     "server": "node server.js",
     "frontend": "npx serve . -p 8080",
-    "build": "echo 'Frontend build complete'",
+    "build": "echo 'Static site ready'",
     "deploy": "npm run build && npm start"
   },
   "keywords": ["game", "space", "adventure", "kokok", "roach"],
