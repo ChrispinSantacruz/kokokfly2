@@ -11,12 +11,20 @@
     "build": "echo 'Static site ready'",
     "deploy": "npm run build && npm start"
   },
-  "keywords": ["game", "space", "adventure", "kokok", "roach"],
+  "keywords": [
+    "game",
+    "space",
+    "adventure",
+    "kokok",
+    "roach"
+  ],
   "author": "Kokok Game Studio",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "dotenv": "^17.0.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.16.1"
   },
   "engines": {
     "node": ">=14.0.0"

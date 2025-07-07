@@ -3,9 +3,32 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+// Importar modelo MongoDB
+const Score = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Configuración MongoDB
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kokokfly';
+let isMongoConnected = false;
+
+// Conectar a MongoDB
+async function connectMongoDB() {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    isMongoConnected = true;
+    console.log('✅ MongoDB connected successfully');
+    console.log('📊 Database:', mongoose.connection.name);
+  } catch (error) {
+    console.error('❌ MongoDB connection failed:', error.message);
+    console.log('⚠️  Using JSON file fallback');
+    isMongoConnected = false;
+  }
+}
 
 // Middleware
 app.use(cors());
@@ -77,25 +100,37 @@ function getLocalIP() {
 initializeScoresFile();
 
 // Endpoint para obtener leaderboards
-app.get('/api/leaderboards', (req, res) => {
+app.get('/api/leaderboards', async (req, res) => {
   try {
-    const scores = readScores();
+    let leaderboards;
     
-    // Ordenar y limitar a top 100
-    const easyTop = scores.easy
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 100);
-    
-    const hardTop = scores.hard
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 100);
+    if (isMongoConnected) {
+      // Usar MongoDB
+      leaderboards = await Score.getLeaderboards();
+      console.log('📊 Leaderboards fetched from MongoDB');
+    } else {
+      // Fallback a archivo JSON
+      const scores = readScores();
+      
+      const easyTop = scores.easy
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 100);
+      
+      const hardTop = scores.hard
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 100);
+      
+      leaderboards = {
+        easy: easyTop,
+        hard: hardTop
+      };
+      console.log('📁 Leaderboards fetched from JSON file');
+    }
     
     res.json({
       success: true,
-      data: {
-        easy: easyTop,
-        hard: hardTop
-      }
+      data: leaderboards,
+      source: isMongoConnected ? 'mongodb' : 'json'
     });
   } catch (error) {
     console.error('Error getting leaderboards:', error);
@@ -107,7 +142,7 @@ app.get('/api/leaderboards', (req, res) => {
 });
 
 // Endpoint para enviar nueva puntuación
-app.post('/api/submit-score', (req, res) => {
+app.post('/api/submit-score', async (req, res) => {
   try {
     const { playerName, score, level } = req.body;
     
@@ -125,82 +160,95 @@ app.post('/api/submit-score', (req, res) => {
     }
     
     const cleanName = sanitizeName(playerName);
-    const scores = readScores();
+    let result;
     
-    // Buscar si el jugador ya existe
-    const existingPlayerIndex = scores[level].findIndex(entry => 
-      entry.playerName === cleanName
-    );
-    
-    let scoreEntry;
-    let isNewRecord = false;
-    let isPersonalBest = false;
-    
-    if (existingPlayerIndex !== -1) {
-      // El jugador ya existe
-      const existingScore = scores[level][existingPlayerIndex].score;
+    if (isMongoConnected) {
+      // Usar MongoDB
+      result = await Score.submitScore(cleanName, score, level);
+      console.log(`💾 Score saved to MongoDB: ${cleanName} - ${score} (${level})`);
+    } else {
+      // Fallback a archivo JSON
+      const scores = readScores();
       
-      if (score > existingScore) {
-        // Nueva puntuación es mejor - actualizar entrada existente
+      // Buscar si el jugador ya existe
+      const existingPlayerIndex = scores[level].findIndex(entry => 
+        entry.playerName === cleanName
+      );
+      
+      let scoreEntry;
+      let isNewRecord = false;
+      let isPersonalBest = false;
+      
+      if (existingPlayerIndex !== -1) {
+        // El jugador ya existe
+        const existingScore = scores[level][existingPlayerIndex].score;
+        
+        if (score > existingScore) {
+          // Nueva puntuación es mejor - actualizar entrada existente
+          scoreEntry = {
+            playerName: cleanName,
+            score: score,
+            timestamp: new Date().toISOString(),
+            date: new Date().toLocaleDateString('es-ES')
+          };
+          scores[level][existingPlayerIndex] = scoreEntry;
+          isPersonalBest = true;
+        } else {
+          // Puntuación no es mejor - no actualizar, usar entrada existente
+          scoreEntry = scores[level][existingPlayerIndex];
+        }
+      } else {
+        // Nuevo jugador - crear nueva entrada
         scoreEntry = {
           playerName: cleanName,
           score: score,
           timestamp: new Date().toISOString(),
           date: new Date().toLocaleDateString('es-ES')
         };
-        scores[level][existingPlayerIndex] = scoreEntry;
+        scores[level].push(scoreEntry);
         isPersonalBest = true;
-      } else {
-        // Puntuación no es mejor - no actualizar, usar entrada existente
-        scoreEntry = scores[level][existingPlayerIndex];
       }
-    } else {
-      // Nuevo jugador - crear nueva entrada
-      scoreEntry = {
-        playerName: cleanName,
-        score: score,
-        timestamp: new Date().toISOString(),
-        date: new Date().toLocaleDateString('es-ES')
-      };
-      scores[level].push(scoreEntry);
-      isPersonalBest = true;
-    }
-    
-    // Ordenar y mantener solo top 100
-    scores[level] = scores[level]
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 100);
-    
-    // Verificar si es récord general
-    isNewRecord = scores[level].length > 0 && scores[level][0].playerName === cleanName && scores[level][0].score === score;
-    
-    // Guardar
-    if (!writeScores(scores)) {
-      return res.status(500).json({
-        error: 'Error saving score'
-      });
-    }
-    
-    // Encontrar posición actual del jugador
-    const playerPosition = scores[level].findIndex(entry => 
-      entry.playerName === cleanName
-    ) + 1;
-    
-    // Obtener top 10 para mostrar
-    const top10 = scores[level].slice(0, 10);
-    
-    res.json({
-      success: true,
-      data: {
+      
+      // Ordenar y mantener solo top 100
+      scores[level] = scores[level]
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 100);
+      
+      // Verificar si es récord general
+      isNewRecord = scores[level].length > 0 && scores[level][0].playerName === cleanName && scores[level][0].score === score;
+      
+      // Guardar
+      if (!writeScores(scores)) {
+        return res.status(500).json({
+          error: 'Error saving score'
+        });
+      }
+      
+      // Encontrar posición actual del jugador
+      const playerPosition = scores[level].findIndex(entry => 
+        entry.playerName === cleanName
+      ) + 1;
+      
+      // Obtener top 10 para mostrar
+      const top10 = scores[level].slice(0, 10);
+      
+      result = {
         position: playerPosition,
         top10: top10,
         totalPlayers: scores[level].length,
         isNewRecord: isNewRecord,
         isPersonalBest: isPersonalBest,
         message: isPersonalBest ? 
-          (isNewRecord ? '¡Nuevo record world!' : '¡Nuevo personal record!') : 
+          (isNewRecord ? '¡Nuevo record mundial!' : '¡Nuevo record personal!') : 
           '¡Keep trying!'
-      }
+      };
+      console.log(`📁 Score saved to JSON: ${cleanName} - ${score} (${level})`);
+    }
+    
+    res.json({
+      success: true,
+      data: result,
+      source: isMongoConnected ? 'mongodb' : 'json'
     });
     
   } catch (error) {
@@ -213,30 +261,46 @@ app.post('/api/submit-score', (req, res) => {
 });
 
 // Endpoint para obtener estadísticas
-app.get('/api/stats', (req, res) => {
+app.get('/api/stats', async (req, res) => {
   try {
-    const scores = readScores();
+    let stats;
     
-    const easyStats = {
-      totalPlayers: scores.easy.length,
-      highestScore: scores.easy.length > 0 ? Math.max(...scores.easy.map(s => s.score)) : 0,
-      averageScore: scores.easy.length > 0 ? 
-        Math.round(scores.easy.reduce((sum, s) => sum + s.score, 0) / scores.easy.length) : 0
-    };
-    
-    const hardStats = {
-      totalPlayers: scores.hard.length,
-      highestScore: scores.hard.length > 0 ? Math.max(...scores.hard.map(s => s.score)) : 0,
-      averageScore: scores.hard.length > 0 ? 
-        Math.round(scores.hard.reduce((sum, s) => sum + s.score, 0) / scores.hard.length) : 0
-    };
+    if (isMongoConnected) {
+      // Usar MongoDB
+      stats = await Score.getStats();
+      // Redondear average scores
+      stats.easy.averageScore = Math.round(stats.easy.averageScore || 0);
+      stats.hard.averageScore = Math.round(stats.hard.averageScore || 0);
+      console.log('📈 Stats fetched from MongoDB');
+    } else {
+      // Fallback a archivo JSON
+      const scores = readScores();
+      
+      const easyStats = {
+        totalPlayers: scores.easy.length,
+        highestScore: scores.easy.length > 0 ? Math.max(...scores.easy.map(s => s.score)) : 0,
+        averageScore: scores.easy.length > 0 ? 
+          Math.round(scores.easy.reduce((sum, s) => sum + s.score, 0) / scores.easy.length) : 0
+      };
+      
+      const hardStats = {
+        totalPlayers: scores.hard.length,
+        highestScore: scores.hard.length > 0 ? Math.max(...scores.hard.map(s => s.score)) : 0,
+        averageScore: scores.hard.length > 0 ? 
+          Math.round(scores.hard.reduce((sum, s) => sum + s.score, 0) / scores.hard.length) : 0
+      };
+      
+      stats = {
+        easy: easyStats,
+        hard: hardStats
+      };
+      console.log('📁 Stats fetched from JSON file');
+    }
     
     res.json({
       success: true,
-      data: {
-        easy: easyStats,
-        hard: hardStats
-      }
+      data: stats,
+      source: isMongoConnected ? 'mongodb' : 'json'
     });
   } catch (error) {
     console.error('Error getting stats:', error);
@@ -247,30 +311,157 @@ app.get('/api/stats', (req, res) => {
   }
 });
 
+// Endpoint para migrar datos de JSON a MongoDB
+app.post('/api/migrate-data', async (req, res) => {
+  try {
+    if (!isMongoConnected) {
+      return res.status(503).json({
+        success: false,
+        error: 'MongoDB not connected'
+      });
+    }
+    
+    const scores = readScores();
+    let migratedCount = 0;
+    
+    // Migrar scores de Easy
+    for (const score of scores.easy) {
+      try {
+        const result = await Score.submitScore(score.playerName, score.score, 'easy');
+        migratedCount++;
+      } catch (error) {
+        console.error('Error migrating easy score:', error.message);
+      }
+    }
+    
+    // Migrar scores de Hard
+    for (const score of scores.hard) {
+      try {
+        const result = await Score.submitScore(score.playerName, score.score, 'hard');
+        migratedCount++;
+      } catch (error) {
+        console.error('Error migrating hard score:', error.message);
+      }
+    }
+    
+    console.log(`📦 Migration completed: ${migratedCount} scores migrated`);
+    
+    res.json({
+      success: true,
+      message: `Successfully migrated ${migratedCount} scores to MongoDB`,
+      data: {
+        migratedCount,
+        totalInJSON: scores.easy.length + scores.hard.length
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error migrating data:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error migrating data'
+    });
+  }
+});
+
 // Servir archivos estáticos
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Migrar datos automáticamente al inicio
+async function autoMigrateData() {
+  if (!isMongoConnected) return;
+  
+  try {
+    // Verificar si ya hay datos en MongoDB
+    const existingCount = await Score.countDocuments();
+    if (existingCount > 0) {
+      console.log(`📊 MongoDB already has ${existingCount} scores, skipping auto-migration`);
+      return;
+    }
+    
+    // Verificar si hay datos en JSON para migrar
+    const jsonScores = readScores();
+    const totalJSON = jsonScores.easy.length + jsonScores.hard.length;
+    
+    if (totalJSON === 0) {
+      console.log('📁 No data in JSON file to migrate');
+      return;
+    }
+    
+    console.log(`📦 Auto-migrating ${totalJSON} scores from JSON to MongoDB...`);
+    
+    let migratedCount = 0;
+    
+    // Migrar scores de Easy
+    for (const score of jsonScores.easy) {
+      try {
+        await Score.submitScore(score.playerName, score.score, 'easy');
+        migratedCount++;
+      } catch (error) {
+        console.error('Error migrating easy score:', error.message);
+      }
+    }
+    
+    // Migrar scores de Hard
+    for (const score of jsonScores.hard) {
+      try {
+        await Score.submitScore(score.playerName, score.score, 'hard');
+        migratedCount++;
+      } catch (error) {
+        console.error('Error migrating hard score:', error.message);
+      }
+    }
+    
+    console.log(`✅ Auto-migration completed: ${migratedCount}/${totalJSON} scores migrated`);
+    
+  } catch (error) {
+    console.error('❌ Error during auto-migration:', error.message);
+  }
+}
+
+// Inicializar y arrancar servidor
+async function startServer() {
+  // Conectar a MongoDB primero
+  await connectMongoDB();
+  
+  // Inicializar archivo JSON como fallback
+  initializeScoresFile();
+  
+  // Migrar datos automáticamente si es necesario
+  await autoMigrateData();
+  
+  // Iniciar servidor
+  app.listen(PORT, '0.0.0.0', () => {
+    const localIP = getLocalIP();
+    
+    console.log(`🚀 Server running on:`);
+    console.log(`   📱 Local:     http://localhost:${PORT}`);
+    console.log(`   🌐 Red WiFi:  http://${localIP}:${PORT}`);
+    console.log(`\n📊 APIs available:`);
+    console.log(`   📈 Leaderboards: http://${localIP}:${PORT}/api/leaderboards`);
+    console.log(`   📝 Stats: http://${localIP}:${PORT}/api/stats`);
+    
+    console.log(`\n🎮 Access from other devices:`);
+    console.log(`   ✅ Main computer: http://localhost:${PORT}`);
+    console.log(`   ✅ Other computers:   http://${localIP}:${PORT}`);
+    console.log(`   ✅ Mobile devices:      http://${localIP}:${PORT}`);
+    console.log(`   ✅ Tablets:      http://${localIP}:${PORT}`);
+    
+    console.log(`\n🔧 Configuration:`);
+    console.log(`   📡 Server IP: ${localIP}`);
+    console.log(`   🔌 Port: ${PORT}`);
+    console.log(`   🛜 Network: All devices on the same WiFi`);
+    console.log(`   💾 Database: ${isMongoConnected ? 'MongoDB ✅' : 'JSON fallback ⚠️'}`);
+    console.log(`   🔗 MongoDB URI: ${MONGODB_URI.replace(/\/\/.*@/, '//***:***@')}`);
+    
+    if (!isMongoConnected) {
+      console.log(`\n⚠️  MongoDB not connected - using JSON file fallback`);
+      console.log(`   💡 To use persistent storage, configure MONGODB_URI environment variable`);
+    }
+  });
+}
+
 // Iniciar servidor
-app.listen(PORT, '0.0.0.0', () => {
-  const localIP = getLocalIP();
-  
-  console.log(`🚀 Server running on:`);
-  console.log(`   📱 Local:     http://localhost:${PORT}`);
-  console.log(`   🌐 Red WiFi:  http://${localIP}:${PORT}`);
-  console.log(`\n📊 APIs available:`);
-  console.log(`   📈 Leaderboards: http://${localIP}:${PORT}/api/leaderboards`);
-  console.log(`   📝 Stats: http://${localIP}:${PORT}/api/stats`);
-  
-  console.log(`\n🎮 Access from other devices:`);
-  console.log(`   ✅ Main computer: http://localhost:${PORT}`);
-  console.log(`   ✅ Other computers:   http://${localIP}:${PORT}`);
-  console.log(`   ✅ Mobile devices:      http://${localIP}:${PORT}`);
-  console.log(`   ✅ Tablets:      http://${localIP}:${PORT}`);
-  
-  console.log(`\n🔧 Network configuration:`);
-  console.log(`   📡 Server IP: ${localIP}`);
-  console.log(`   🔌 Port: ${PORT}`);
-  console.log(`   🛜 Network: All devices on the same WiFi`);
-}); 
+startServer().catch(console.error); 
