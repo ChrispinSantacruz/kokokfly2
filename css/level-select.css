@@ -1,6 +1,6 @@
 /* Level Select Screen Styles */
 .level-select-screen {
-  background: url('../images/bgame.png') center/cover no-repeat;
+  background: url('../images/background_kokok-06.png') center/cover no-repeat;
   min-height: 100vh;
   padding: 2rem;
 }

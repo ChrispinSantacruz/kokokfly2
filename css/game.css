@@ -227,7 +227,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url("../images/gameover.png");
+  background-image: url("../images/background_kokok-04.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -348,7 +348,7 @@
 /* Efectos de hover removidos */
 
 .game-over-buttons .leaderboards-btn {
-  background-image: url("../images/buttons/customize.png");
+  background-image: url("../images/LEADERBOARDS_MENU-07.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
