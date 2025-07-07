@@ -21,8 +21,8 @@ class LeaderboardsManager {
         window.location.hostname.includes('netlify.app') ||
         window.location.hostname.includes('github.io') ||
         window.location.protocol === 'https:') {
-      // 🚀 CAMBIAR ESTA URL POR LA DE TU BACKEND EN RENDER
-      return 'https://tu-backend-render.onrender.com/api';
+      // 🚀 URL de tu backend en Render
+      return 'https://kokokfly2.onrender.com/api';
     }
     
     // Si estamos en red local, usar la IP del servidor
