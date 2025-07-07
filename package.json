@@ -1,0 +1,24 @@
+{
+  "name": "kokok-the-roach-game",
+  "version": "1.0.0",
+  "description": "Space adventure game featuring Kokok The Roach",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "server": "node server.js",
+    "frontend": "npx serve . -p 8080",
+    "build": "echo 'Frontend build complete'",
+    "deploy": "npm run build && npm start"
+  },
+  "keywords": ["game", "space", "adventure", "kokok", "roach"],
+  "author": "Kokok Game Studio",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

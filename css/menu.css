@@ -1,0 +1,569 @@
+/* Menu Screen Styles */
+.menu-screen {
+  background-image: url("../images/menu1.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* 📍 POSICIONES DEL MENÚ PRINCIPAL - EDITAR AQUÍ */
+
+.menu-title {
+  position: absolute;
+  top: 5vh;  /* ⬆️ Logo subido - CAMBIAR AQUÍ */
+  left: 10.5vw;  /* ⬅️ Logo a la izquierda - CAMBIAR AQUÍ */
+  transform: translateX(0);  /* Sin centrado automático */
+  text-align: center;
+  animation: fadeInDown 0.8s ease-out both;
+}
+
+.menu-logo {
+  max-width: 100%;
+  height: auto;
+  max-height: 15vh; /* Cambiado a vh para ser responsive */
+  object-fit: contain;
+  filter: drop-shadow(0 0 2vh rgba(251, 191, 36, 0.6));
+  margin-bottom: 1vh; /* Cambiado a vh */
+  transition: all 0.4s ease; /* Efecto hover */
+  cursor: pointer; /* Cursor pointer para hover */
+}
+
+.welcome-message {
+  position: absolute;
+  top: 7.5vh;  /* ⬆️ Bienvenida subida - CAMBIAR AQUÍ */
+  left: 59.5%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1vh; /* Cambiado a vh para ser responsive */
+  color: var(--primary-cyan);
+  font-size: clamp(1rem, 2.5vh, 1.5rem); /* Responsive font size */
+  font-weight: 700;
+  text-shadow: 0 0.3vh 0.6vh rgba(0, 0, 0, 0.8); /* Cambiado a vh */
+  animation: fadeIn 0.6s ease-out 0.5s both;
+  transition: all 0.3s ease; /* Efecto hover */
+  cursor: default; /* Cursor default para hover */
+}
+
+.menu-buttons {
+  position: absolute;
+  left: 8vw;
+  width: clamp(20vw, 25vh, 30vw); /* Responsive width */
+  min-width: 15rem; /* Medida universal */
+  max-width: 25rem; /* Medida universal */
+}
+
+.btn-play {
+  top: 22vh;  /* ⬆️ Play subido - CAMBIAR AQUÍ */
+  animation: slideInLeft 0.6s ease-out 0.3s both;
+}
+
+.btn-customize {
+  top: 34vh;  /* ⬆️ Customize subido - CAMBIAR AQUÍ */
+  animation: slideInLeft 0.6s ease-out 0.4s both;
+}
+
+.btn-instructions {
+  top: 46vh;  /* ⬆️ Instructions subido - CAMBIAR AQUÍ */
+  animation: slideInLeft 0.6s ease-out 0.5s both;
+}
+
+.btn-leaderboards {
+  top: 58vh !important;  /* ⬆️ Gap de 12vh uniforme (46vh + 12vh) - CAMBIAR AQUÍ */
+  animation: slideInLeft 0.6s ease-out 0.6s both;
+}
+
+.menu-btn {
+  width: 100%;
+  height: clamp(6vh, 8vh, 10vh); /* Responsive height */
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font-size: clamp(1rem, 2vh, 1.5rem); /* Responsive font size */
+  font-weight: 700;
+  font-family: "Orbitron", monospace;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1vh; /* Responsive gap */
+}
+
+.btn-play-style {
+  background-image: url("../images/buttons/play.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  color: transparent;
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover sutil e invisible */
+.btn-play-style:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1) drop-shadow(0 0 1vh rgba(251, 191, 36, 0.3));
+}
+
+.btn-customize-style {
+  background-image: url("../images/buttons/customize.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  color: transparent;
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover sutil e invisible */
+.btn-customize-style:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1) drop-shadow(0 0 1vh rgba(34, 211, 238, 0.3));
+}
+
+.btn-instructions-style {
+  background-image: url("../images/buttons/instructions.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  color: transparent;
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover sutil e invisible */
+.btn-instructions-style:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1) drop-shadow(0 0 1vh rgba(168, 85, 247, 0.3));
+}
+
+.btn-leaderboards-style {
+  background-image: url("../images/buttons/mainmenu.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  color: transparent;
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover sutil e invisible */
+.btn-leaderboards-style:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1) drop-shadow(0 0 1vh rgba(34, 197, 94, 0.3));
+}
+
+.stats-container {
+  position: absolute !important;
+  right: 30vw !important;  /* ⬅️ ACTUALIZADO - Consistente con high-scores - CAMBIAR AQUÍ */
+  width: clamp(22vw, 28vh, 35vw) !important; /* Responsive width */
+  min-width: 17rem !important; /* Medida universal */
+  max-width: 22rem !important; /* Medida universal */
+}
+
+.high-scores {
+  top: 21vh !important;  /* ⬆️ Gap de 8vh desde welcome-message (7.5vh + 8vh) - CAMBIAR AQUÍ */
+  right: 30vw !important;  /* ⬅️ Alineado con welcome-message - CAMBIAR AQUÍ */
+  animation: slideInRight 0.6s ease-out 0.6s both;
+}
+
+.unlocked-vehicles {
+  top: 50vh !important;  /* ⬆️ Separado del botón leaderboards (58vh + 7vh) - CAMBIAR AQUÍ */
+  right: 30vw !important;  /* ⬅️ Misma posición que high-scores - CAMBIAR AQUÍ */
+  animation: slideInRight 0.6s ease-out 0.7s both;
+}
+
+.stats-card {
+  border: none;
+  border-radius: 0;
+  padding: clamp(0.8rem, 2vh, 1.5rem); /* Responsive padding */
+  background: transparent;
+  transition: all 0.3s ease; /* Efecto hover */
+  cursor: pointer; /* Cursor pointer para hover */
+}
+
+.high-scores {
+  border-color: var(--primary-yellow);
+}
+
+.unlocked-vehicles {
+  border-color: var(--primary-cyan);
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* ⬅️ Alinear a la izquierda */
+  gap: 1.5vh; /* Responsive gap reducido */
+  margin-bottom: 1.5vh; /* Responsive margin */
+}
+
+.stats-title {
+  font-size: clamp(1.3rem, 3vh, 1.8rem); /* ⬆️ AUMENTADO - Responsive font size */
+  font-weight: 700;
+  text-shadow: 0 0.1vh 0.3vh rgba(0, 0, 0, 0.8); /* Responsive shadow */
+}
+
+.high-scores .stats-title {
+  color: var(--primary-yellow);
+}
+
+.unlocked-vehicles .stats-title {
+  color: var(--primary-cyan);
+}
+
+.score-item,
+.vehicle-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(0.5rem, 1vh, 0.8rem); /* Responsive padding */
+  border: none;
+  border-radius: 0;
+  margin-bottom: 1vh; /* Responsive margin */
+  transition: all 0.25s ease; /* Efecto hover */
+  cursor: pointer; /* Cursor pointer para hover */
+}
+
+.score-easy {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.score-hard {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.vehicle-item {
+  border-color: rgba(34, 211, 238, 0.3);
+}
+
+.score-label {
+  font-size: clamp(1.4rem, 3.2vh, 1.8rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Easy Mode, Hard Mode, Ships, UFOs */
+  font-weight: 700 !important; /* ⬆️ Más bold para mejor visibilidad */
+}
+
+.score-easy .score-label {
+  color: var(--primary-green);
+}
+
+.score-hard .score-label {
+  color: #ef4444;
+}
+
+.vehicle-item .score-label {
+  color: var(--text-gray);
+}
+
+.score-value {
+  color: var(--text-white);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.5vh, 2rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Valores de puntuación */
+}
+
+.menu-bottom-message {
+  position: absolute;
+  bottom: 15vh !important; /* ⬇️ MOVIDO MÁS ABAJO - Donde señalas específicamente */
+  left: 1vw;
+  transform: translateX(-50%);
+  text-align: center;
+  animation: slideInUp 0.6s ease-out 0.8s both;
+  transition: all 0.3s ease; /* Efecto hover */
+}
+
+.menu-bottom-message p {
+  color: var(--text-gray);
+  font-size: clamp(1.3rem, 3vh, 1.8rem); /* ⬆️⬆️ MÁS AUMENTADO - Choose your adventure */
+  font-weight: 700; /* ⬆️ Más bold para mejor visibilidad */
+  text-shadow: 0 0.3vh 0.6vh rgba(0, 0, 0, 0.8); /* Responsive shadow */
+  border: none;
+  border-radius: 0;
+  padding: clamp(0.8rem, 2vh, 1.5rem) clamp(1.5rem, 3vh, 2.5rem); /* Responsive padding */
+  line-height: 1.3; /* ⬆️ Espaciado entre líneas ajustado */
+}
+
+/* 🎯 EFECTOS DE HOVER SUTILES E INVISIBLES */
+/* Todos los efectos son suaves y sin bordes/burbujas visibles */
+
+/* 📊 ESTADÍSTICAS - Efectos sutiles */
+.stats-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.stats-card:hover {
+  transform: translateY(-0.5vh);
+  filter: brightness(1.05);
+}
+
+.high-scores:hover {
+  box-shadow: 0 0 2vh rgba(251, 191, 36, 0.2);
+}
+
+.unlocked-vehicles:hover {
+  box-shadow: 0 0 2vh rgba(34, 211, 238, 0.2);
+}
+
+/* 🏆 LOGO - Efecto sutil (ya definido arriba con estilos base) */
+.menu-logo:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1) drop-shadow(0 0 2vh rgba(251, 191, 36, 0.4));
+}
+
+/* 👋 MENSAJE DE BIENVENIDA - Efecto muy sutil (transition ya definido) */
+.welcome-message:hover {
+  transform: scale(1.01);
+  filter: brightness(1.05);
+}
+
+/* 📋 ITEMS DE PUNTUACIÓN - Efectos individuales (transition en la definición original) */
+.score-item:hover,
+.vehicle-item:hover {
+  transform: translateX(0.5vh);
+  filter: brightness(1.08);
+}
+
+.score-easy:hover {
+  box-shadow: 0 0 1vh rgba(34, 197, 94, 0.3);
+}
+
+.score-hard:hover {
+  box-shadow: 0 0 1vh rgba(239, 68, 68, 0.3);
+}
+
+.vehicle-item:hover {
+  box-shadow: 0 0 1vh rgba(34, 211, 238, 0.3);
+}
+
+/* 💬 MENSAJE INFERIOR - Efecto muy sutil (transition agregado arriba) */
+.menu-bottom-message:hover {
+  transform: translateX(-50%) scale(1.02);
+  filter: brightness(1.05);
+}
+
+/* 🎨 EFECTOS ADICIONALES INVISIBLES */
+
+/* Efecto de pulso suave en botones activos */
+@keyframes subtle-pulse {
+  0% { filter: brightness(1) drop-shadow(0 0 0vh transparent); }
+  50% { filter: brightness(1.05) drop-shadow(0 0 0.5vh rgba(255, 255, 255, 0.1)); }
+  100% { filter: brightness(1) drop-shadow(0 0 0vh transparent); }
+}
+
+/* Activar pulso al hacer focus (keyboard navigation) */
+.menu-btn:focus {
+  animation: subtle-pulse 2s ease-in-out infinite;
+  outline: none;
+}
+
+/* 📱 RESPONSIVIDAD CONSOLIDADA - SIN CONFLICTOS */
+
+/* Ajustes para pantallas muy pequeñas (móviles verticales) */
+@media screen and (max-width: 480px) {
+  .menu-buttons {
+    left: 5vw;
+    width: 40vw;
+    min-width: 12rem;
+  }
+  
+  .stats-container {
+    right: 5vw;
+    width: 40vw;
+    min-width: 12rem;
+  }
+  
+  .menu-logo {
+    max-height: 12vh;
+  }
+  
+  .welcome-message {
+    font-size: clamp(0.9rem, 2vh, 1.2rem);
+  }
+  
+  .menu-btn {
+    height: clamp(5vh, 6vh, 8vh);
+    font-size: clamp(0.9rem, 1.8vh, 1.2rem);
+  }
+}
+
+/* Ajustes para pantallas medianas (tablets) */
+@media screen and (min-width: 481px) and (max-width: 1024px) {
+  .menu-buttons {
+    left: 6vw;
+    width: clamp(25vw, 20vh, 35vw);
+  }
+  
+  .stats-container {
+    right: 6vw;
+    width: clamp(25vw, 22vh, 35vw);
+  }
+  
+  .menu-logo {
+    max-height: 13vh;
+  }
+}
+
+/* Ajustes para pantallas grandes (desktop) */
+@media screen and (min-width: 1025px) {
+  .menu-buttons {
+    left: 8vw;
+    width: clamp(20vw, 18vh, 28vw);
+  }
+  
+  .stats-container {
+    right: 8vw;
+    width: clamp(22vw, 20vh, 30vw);
+  }
+}
+
+/* Ajustes para orientación landscape en móviles - POSICIONES CONSISTENTES */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .menu-logo {
+    max-height: 10vh;
+    margin-bottom: 0.5vh;
+  }
+  
+  .welcome-message {
+    font-size: clamp(0.8rem, 1.8vh, 1.1rem);
+  }
+  
+  /* Mantener las posiciones principales */
+  .btn-play {
+    top: 22vh;  /* Consistente con desktop */
+  }
+  
+  .btn-customize {
+    top: 34vh;  /* Consistente con desktop */
+  }
+  
+  .btn-instructions {
+    top: 46vh;  /* Consistente con desktop */
+  }
+  
+    .btn-leaderboards {
+    top: 58vh !important;  /* ACTUALIZADO - Gap uniforme de 12vh */
+  }
+
+  .high-scores {
+    top: 27vh;  /* Consistente con desktop */
+    right: 20vw;  /* ⬅️ Consistente con posiciones principales */
+  }
+
+  .unlocked-vehicles {
+    top: 65vh;  /* Separado del botón leaderboards (58vh + 7vh) */
+    right: 30vw;  /* ⬅️ Consistente con desktop */
+  }
+  
+  .menu-bottom-message {
+    bottom: 2vh; /* ⬇️ Consistente con desktop - más abajo */
+  }
+  
+  .menu-btn {
+    height: clamp(4vh, 5vh, 6vh);
+    font-size: clamp(0.8rem, 1.5vh, 1rem);
+  }
+}
+
+/* Ajustes para pantallas muy anchas */
+@media screen and (min-aspect-ratio: 16/9) {
+  .menu-buttons {
+    left: 10vw;
+    width: clamp(18vw, 15vh, 25vw);
+  }
+  
+  .stats-container {
+    right: 10vw;
+    width: clamp(20vw, 18vh, 28vw);
+  }
+}
+
+/* 🔧 DESACTIVAR EFECTOS EN MÓVILES */
+/* Para evitar efectos pegados en dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .stats-card:hover,
+  .menu-logo:hover,
+  .welcome-message:hover,
+  .score-item:hover,
+  .vehicle-item:hover,
+  .menu-bottom-message:hover {
+    transform: none;
+    filter: none;
+    box-shadow: none;
+  }
+  
+  /* Mantener solo efectos de botones principales en móviles */
+  .btn-play-style:active,
+  .btn-customize-style:active,
+  .btn-instructions-style:active,
+  .btn-leaderboards-style:active {
+    transform: scale(0.98);
+    filter: brightness(0.9);
+  }
+  
+  .menu-btn {
+    /* Aumentar área de toque en móviles */
+    min-height: 6vh;
+    padding: 1vh 2vh;
+  }
+  
+  .score-item,
+  .vehicle-item {
+    /* Espaciado más amplio en móviles */
+    padding: 1.2vh 1.5vh;
+  }
+}
+
+/* Ajustes para mejorar la legibilidad en todas las pantallas */
+.menu-btn,
+.stats-title,
+.score-label,
+.score-value,
+.welcome-message,
+.menu-bottom-message p {
+  /* Asegurar que el texto sea siempre legible */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Transiciones suaves ya definidas en cada elemento */
+
+/* 🎯 EFECTOS DE SELECCIÓN INVISIBLES */
+/* Eliminar selección azul en textos */
+.menu-btn,
+.stats-card,
+.score-item,
+.vehicle-item,
+.welcome-message,
+.menu-bottom-message {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* 👆 MEJORAR ÁREA DE CLICK */
+.menu-btn {
+  position: relative;
+}
+
+.menu-btn::before {
+  content: '';
+  position: absolute;
+  top: -1vh;
+  left: -1vh;
+  right: -1vh;
+  bottom: -1vh;
+  background: transparent;
+  border-radius: 1vh;
+  z-index: -1;
+}
+
+/* 🌟 EFECTOS DE ENTRADA SUAVES */
+.menu-btn,
+.stats-card,
+.score-item,
+.vehicle-item {
+  will-change: transform, filter;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}

@@ -1,0 +1,570 @@
+/* Responsive Design */
+/* 🔄 CONTROL AUTOMÁTICO DE ORIENTACIÓN MÓVIL HABILITADO
+   - Juego fuerza orientación horizontal automáticamente
+   - Menús vuelven a orientación vertical
+   - Solo en dispositivos compatibles */
+
+/* Large screens (1200px and up) */
+@media (min-width: 1200px) {
+  .login-title {
+    width: 35vw;
+  }
+
+  .login-form,
+  .start-button {
+    width: 20vw;
+    min-width: 320px;
+  }
+
+  .menu-buttons {
+    width: 18vw;
+    min-width: 280px;
+  }
+
+  /* .stats-container {
+    width: 20vw;
+    min-width: 300px;
+  } */
+  /* ⚠️ DESHABILITADO - Las medidas están definidas en menu.css */
+
+  /* Game screen adjustments */
+  .game-hud {
+    padding: 1rem 2rem;
+  }
+
+  .score-value {
+    font-size: clamp(1.5rem, 3.5vh, 2rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Valores de puntuación */
+  }
+
+  .game-instructions p {
+    font-size: 1.25rem;
+  }
+}
+
+/* Medium screens (768px to 1199px) */
+@media (max-width: 1199px) {
+  .login-title {
+    width: 50vw;
+  }
+
+  .login-form,
+  .start-button {
+    width: 35vw;
+    min-width: 280px;
+  }
+
+  .menu-buttons {
+    width: 25vw;
+    min-width: 220px;
+  }
+
+  /* .stats-container {
+    width: 28vw;
+    min-width: 250px;
+  } */
+  /* ⚠️ DESHABILITADO - Las medidas están definidas en menu.css */
+
+  .levels-container {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+
+  .customization-container {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+  }
+
+  .instructions-container {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+
+  /* Game screen adjustments */
+  .game-hud {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .score-value {
+    font-size: clamp(1.5rem, 3.5vh, 2rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Valores de puntuación */
+  }
+
+  .pause-content,
+  .game-over-content {
+    padding: 2.5rem;
+  }
+}
+
+/* Small screens (480px to 767px) */
+@media (max-width: 767px) {
+  /* 🔥 LOGIN RESPONSIVE - SEPARACIÓN DE LÓGICAS */
+  /* ESPECIFICIDAD ALTA PARA EVITAR CONFLICTOS CON login.css */
+  
+  /* 1. Logo y título - CENTRADO Y MÁS ABAJO (+10%) */
+  .login-screen .login-title {
+    position: absolute !important;
+    top: 20vh !important;  /* ⬇️⬇️ Bajado 10% más (era 18vh) */
+    left: 50% !important;  /* 🎯 Centrado */
+    transform: translateX(-50%) !important;  /* 🎯 Centrado perfecto */
+    width: 85vw !important;  /* 📱 Ancho móvil */
+    min-width: 280px !important;
+    max-width: 400px !important;
+    text-align: center !important;  /* 🎯 Texto centrado */
+  }
+
+  /* 2. Formulario - CENTRADO Y MÁS ABAJO (+10%) */
+  .login-screen .login-form {
+    position: absolute !important;
+    top: 42vh !important;  /* ⬇️⬇️ Bajado 10% más (era 38vh) */
+    left: 50% !important;  /* 🎯 Centrado */
+    transform: translateX(-50%) !important;  /* 🎯 Centrado perfecto */
+    width: 85vw !important;  /* 📱 Ancho móvil */
+    min-width: 280px !important;
+    max-width: 400px !important;
+  }
+
+  /* 3. Botón START - CENTRADO, MÁS ABAJO Y MÁS GRANDE */
+  .login-screen .start-button {
+    position: absolute !important;
+    top: 58vh !important;  /* ⬇️ Más abajo que antes */
+    left: 50% !important;  /* 🎯 Centrado */
+    transform: translateX(-50%) !important;  /* 🎯 Centrado perfecto */
+    width: 85vw !important;  /* 📱 Ancho móvil */
+    min-width: 280px !important;
+    max-width: 400px !important;
+  }
+
+  /* 4. Botón START - MÁS GRANDE */
+  .login-screen .btn-primary {
+    height: clamp(8vh, 12vh, 14vh) !important;  /* ⬆️⬆️ Mucho más grande */
+    width: 100% !important;
+  }
+
+  /* 5. Mensaje final - CENTRADO Y MÁS ABAJO */
+  .login-screen .bottom-message {
+    position: absolute !important;
+    bottom: 5vh !important;  /* ⬇️ Más separado del botón */
+    left: 50% !important;  /* 🎯 Centrado */
+    transform: translateX(-50%) !important;  /* 🎯 Centrado perfecto */
+    width: 90vw !important;  /* 📱 Ancho completo */
+    text-align: center !important;  /* 🎯 Texto centrado */
+  }
+
+  /* 🎯 RESPONSIVE ORGANIZADO CON ESPACIADO AMPLIO - ORDEN VERTICAL */
+  
+  /* 1. Logo - ESPECIFICIDAD ALTA */
+  .menu-screen .menu-title {
+    position: absolute !important;
+    top: 5vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* 2. Mensaje de bienvenida - EN LA ZONA AZUL MARCADA - ESPECIFICIDAD ALTA */
+  .menu-screen .welcome-message {
+    position: absolute !important;
+    top: 20vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    text-align: center !important;
+    font-size: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 1vh !important;
+    color: var(--primary-cyan) !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0.3vh 0.6vh rgba(0, 0, 0, 0.8) !important;
+  }
+
+  /* 3. Botones centrados verticalmente - ESPACIADO AMPLIO - ESPECIFICIDAD ALTA */
+  .menu-screen .menu-buttons {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 80vw !important;
+    min-width: 280px !important;
+    max-width: 25rem !important;
+    text-align: center !important;
+  }
+
+  .btn-play {
+    top: 25vh !important;
+  }
+
+  .btn-customize {
+    top: 35vh !important;
+  }
+
+  .btn-instructions {
+    top: 45vh !important;
+  }
+
+  .btn-leaderboards {
+    top: 55vh !important;
+  }
+
+  /* 4. High Scores - OCULTO EN RESPONSIVE */
+  .high-scores {
+    display: none !important;
+  }
+
+  /* 5. Unlocked Vehicles - OCULTO EN RESPONSIVE */
+  .unlocked-vehicles {
+    display: none !important;
+  }
+
+  /* 6. Mensaje final - OCULTO EN RESPONSIVE */
+  .menu-bottom-message {
+    display: none !important;
+  }
+
+  .level-select-screen,
+  .customization-screen,
+  .instructions-screen {
+    padding: 1rem;
+  }
+
+  .level-header,
+  .customization-header,
+  .instructions-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .levels-container,
+  .customization-container,
+  .instructions-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Game screen mobile adjustments */
+  .game-hud {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    height: auto;
+    min-height: 80px;
+  }
+
+  .hud-left,
+  .hud-right {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hud-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .level-indicator {
+    font-size: 0.875rem;
+  }
+
+  .score-value {
+    font-size: clamp(1.5rem, 3.5vh, 2rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Valores de puntuación */
+  }
+
+  .score-label {
+    font-size: clamp(1.4rem, 3.2vh, 1.8rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Easy Mode, Hard Mode, Ships, UFOs */
+  }
+
+  .game-area {
+    height: calc(100vh - 140px); /* Account for larger mobile HUD */
+  }
+
+  /* Canvas responsive para móviles - PANORÁMICO */
+  #gameCanvas {
+    min-width: 400px !important;
+    min-height: 200px !important;
+    max-width: 100vw !important;
+    max-height: calc(100vh - 140px) !important;
+    aspect-ratio: 2/1 !important; /* Formato panorámico 2:1 */
+  }
+
+  .pause-content,
+  .game-over-content {
+    padding: 1.5rem;
+    margin: 1rem;
+    max-width: 95vw;
+  }
+
+  .pause-content h2,
+  .game-over-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .pause-buttons,
+  .game-over-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pause-btn,
+  .game-over-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.875rem;
+  }
+
+  .game-instructions {
+    padding: 0.5rem;
+    height: auto;
+    min-height: 50px;
+  }
+
+  .game-instructions p {
+    font-size: 0.875rem;
+    line-height: 1.3;
+  }
+}
+
+/* Extra small screens (479px and below) */
+@media (max-width: 479px) {
+  .login-title h1 {
+    font-size: 2.5rem;
+  }
+
+  .menu-title h1 {
+    font-size: 3rem;
+  }
+
+  .login-input,
+  .menu-btn,
+  .btn-primary {
+    height: 48px;
+    font-size: 1rem;
+  }
+
+  /* 🎯 EXTRA SMALL RESPONSIVE - MISMO ESPACIADO AMPLIO */
+  
+  /* 1. Logo (ya definido arriba) */
+  
+  /* 2. Mensaje de bienvenida - EN LA ZONA AZUL MARCADA - ESPECIFICIDAD ALTA */
+  .menu-screen .welcome-message {
+    position: absolute !important;
+    top: 20vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    text-align: center !important;
+    font-size: 0.875rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 1vh !important;
+    color: var(--primary-cyan) !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0.3vh 0.6vh rgba(0, 0, 0, 0.8) !important;
+  }
+
+  /* 3. Botones (posiciones heredadas del media query anterior) */
+  
+  /* 4. High Scores - OCULTO EN RESPONSIVE */
+  .high-scores {
+    display: none !important;
+  }
+  
+  /* 5. Unlocked Vehicles - OCULTO EN RESPONSIVE */
+  .unlocked-vehicles {
+    display: none !important;
+  }
+  
+  /* 6. Mensaje final - OCULTO EN RESPONSIVE */
+  .menu-bottom-message {
+    display: none !important;
+  }
+
+  .level-header h1,
+  .customization-header h1,
+  .instructions-header h1 {
+    font-size: 2rem;
+  }
+
+  .level-card,
+  .vehicles-section,
+  .instruction-card {
+    padding: 1.5rem;
+  }
+
+  .vehicle-preview {
+    width: 80px;
+    height: 80px;
+  }
+
+  .vehicle-image {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Extra small game screen adjustments */
+  .game-hud {
+    padding: 0.4rem;
+    min-height: 70px;
+  }
+
+  .hud-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    gap: 0.25rem;
+  }
+
+  .level-indicator {
+    font-size: 0.75rem;
+  }
+
+  .score-value {
+    font-size: clamp(1.5rem, 3.5vh, 2rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Valores de puntuación */
+  }
+
+  .score-label {
+    font-size: clamp(1.4rem, 3.2vh, 1.8rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Easy Mode, Hard Mode, Ships, UFOs */
+  }
+
+  .game-area {
+    height: calc(100vh - 120px);
+  }
+
+  /* Canvas responsive para pantallas extra pequeñas - PANORÁMICO */
+  #gameCanvas {
+    min-width: 350px !important;
+    min-height: 180px !important;
+    max-width: 100vw !important;
+    max-height: calc(100vh - 120px) !important;
+    aspect-ratio: 2/1 !important; /* Formato panorámico 2:1 */
+  }
+
+  .pause-content,
+  .game-over-content {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .final-score,
+  .best-score {
+    font-size: 1rem;
+  }
+
+  .final-score span,
+  .best-score span {
+    font-size: 1.25rem;
+  }
+
+  .game-instructions {
+    padding: 0.4rem;
+    min-height: 45px;
+  }
+
+  .game-instructions p {
+    font-size: 0.75rem;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+  .login-title {
+    top: 10vh;
+  }
+
+  .login-form {
+    top: 30vh;
+  }
+
+  .start-button {
+    top: 50vh;
+  }
+
+  /* 🎯 LANDSCAPE RESPONSIVE - MANTENER ORDEN DESKTOP */
+  /* En landscape mantenemos el orden desktop ya que hay más espacio horizontal */
+  
+  .menu-title {
+    top: 5vh;
+  }
+
+  .welcome-message {
+    top: 7.5vh !important;  /* ⬆️ Mantener posición desktop */
+    left: 59.5% !important;  /* ⬅️ Mantener posición desktop */
+  }
+
+  .btn-play {
+    top: 20vh;
+  }
+
+  .btn-customize {
+    top: 30vh;
+  }
+
+  .btn-instructions {
+    top: 40vh;
+  }
+
+  .btn-leaderboards {
+    top: 58vh !important;  /* ⬆️ ACTUALIZADO - Gap uniforme de 12vh */
+  }
+
+  .high-scores {
+    top: 21vh !important;  /* ⬆️ ACTUALIZADO - Consistente con desktop */
+    right: 30vw !important;  /* ⬅️ ACTUALIZADO - Consistente con desktop */
+  }
+
+  .unlocked-vehicles {
+    top: 65vh !important;  /* ⬆️ Separado del botón leaderboards (58vh + 7vh) */
+    right: 30vw !important;  /* ⬅️ Consistente con desktop */
+  }
+
+  .menu-bottom-message {
+    bottom: 2vh !important; /* ⬇️ MOVIDO MÁS ABAJO - Consistente con desktop */
+  }
+
+  /* Game screen landscape adjustments */
+  .game-hud {
+    height: 50px;
+    padding: 0.5rem 1rem;
+  }
+
+  .game-area {
+    height: calc(100vh - 100px);
+  }
+
+  /* Canvas responsive para landscape - PANORÁMICO */
+  #gameCanvas {
+    min-width: 600px !important;
+    min-height: 280px !important;
+    max-width: 100vw !important;
+    max-height: calc(100vh - 100px) !important;
+    aspect-ratio: 2.1/1 !important; /* Formato panorámico más ancho en landscape */
+  }
+
+  .game-instructions {
+    height: 40px;
+    padding: 0.5rem;
+  }
+
+  .game-instructions p {
+    font-size: 0.875rem;
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .game-hud {
+    padding: 1rem 3rem;
+  }
+
+  .score-value {
+    font-size: clamp(1.5rem, 3.5vh, 2rem) !important; /* ⬆️⬆️ MÁS AUMENTADO - Valores de puntuación */
+  }
+
+  .game-instructions p {
+    font-size: 1.5rem;
+  }
+
+  .pause-content,
+  .game-over-content {
+    padding: 4rem;
+  }
+}

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kokok The Roach - Space Adventure Game</title>
+    <link rel="icon" type="image/png" href="images/kokok-ufo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/level-select.css">
+    <link rel="stylesheet" href="css/customization.css">
+    <link rel="stylesheet" href="css/instructions.css">
+    <link rel="stylesheet" href="css/leaderboards.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen login-screen">
+        <div class="login-title">
+            <img src="images/logo.png" alt="KOKOK THE ROACH" class="login-logo">
+            <p>Ready to take flight!</p>
+        </div>
+
+        <form id="loginForm" class="login-form">
+            <div class="input-container">
+                <span class="input-icon icon-user"></span>
+                <input 
+                    type="text" 
+                    id="playerName" 
+                    class="login-input" 
+                    placeholder="Your name"
+                    required
+                    minlength="2"
+                >
+                <div id="nameError" class="error-message" style="display: none;"></div>
+            </div>
+            
+            <!-- Players List -->
+            <div id="playersList" class="players-list hidden">
+                <h4>Existing Players:</h4>
+                <div id="playersContainer" class="players-container">
+                    <!-- Players will be added dynamically -->
+                </div>
+            </div>
+        </form>
+
+        <div class="start-button">
+            <button type="submit" form="loginForm" class="btn-primary">
+                <span class="icon-rocket"></span>
+                START ADVENTURE!
+            </button>
+        </div>
+
+        <div class="bottom-message">
+            <p>Join Kokok The Roach on his epic flight adventure</p>
+        </div>
+    </div>
+
+    <!-- Menu Screen -->
+    <div id="menuScreen" class="screen menu-screen hidden">
+        <div class="menu-title">
+            <img src="images/logo.png" alt="KOKOK THE ROACH" class="menu-logo">
+        </div>
+
+        <div class="welcome-message">
+            <span class="icon-user-welcome"></span>
+            <span>Welcome, <span id="welcomeName">Player</span>!</span>
+        </div>
+
+        <div class="menu-buttons btn-play">
+            <button class="menu-btn btn-play-style" onclick="showLevelSelect()">
+                <span class="icon-play"></span>
+                PLAY
+            </button>
+        </div>
+
+        <div class="menu-buttons btn-customize">
+            <button class="menu-btn btn-customize-style" onclick="showCustomization()">
+                <span class="icon-settings"></span>
+                CUSTOMIZE
+            </button>
+        </div>
+
+        <div class="menu-buttons btn-instructions">
+            <button class="menu-btn btn-instructions-style" onclick="showInstructions()">
+                <span class="icon-book"></span>
+                INSTRUCTIONS
+            </button>
+        </div>
+
+        <div class="menu-buttons btn-leaderboards">
+            <button class="menu-btn btn-leaderboards-style" onclick="showLeaderboards()">
+                <span class="icon-trophy"></span>
+                LEADERBOARDS
+            </button>
+        </div>
+
+        <div class="stats-container high-scores">
+            <div class="stats-card">
+                <div class="stats-header">
+                    <span class="icon-trophy"></span>
+                    <h3 class="stats-title">HIGH SCORES</h3>
+                </div>
+                <div class="score-item score-easy">
+                    <span class="score-label">Easy Mode</span>
+                    <span class="score-value" id="easyScore">0</span>
+                </div>
+                <div class="score-item score-hard">
+                    <span class="score-label">Hard Mode</span>
+                    <span class="score-value" id="hardScore">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-container unlocked-vehicles">
+            <div class="stats-card">
+                <h4 class="stats-title">Unlocked Vehicles</h4>
+                <div class="vehicle-item">
+                    <span class="score-label">Ships:</span>
+                    <span class="score-value" id="shipsCount">1/5</span>
+                </div>
+                <div class="vehicle-item">
+                    <span class="score-label">UFOs:</span>
+                    <span class="score-value" id="ufosCount">1/5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-bottom-message">
+            <p>Choose your adventure<br>and help Kokok The Roach conquer the skies</p>
+        </div>
+    </div>
+
+    <!-- Level Select Screen -->
+    <div id="levelSelectScreen" class="screen level-select-screen hidden">
+        <div class="level-header">
+            <button class="back-btn" onclick="showMenu()">
+                <span class="icon-back"></span>
+                Back
+            </button>
+            <h1>SELECT LEVEL</h1>
+        </div>
+
+        <div class="levels-container">
+            <div class="level-card easy-level" onclick="startGame('easy')">
+                <div class="level-image">
+                    <img src="images/kokok-rocket.png" alt="Rocket Ship" style="width: 120px; height: 120px; object-fit: contain;">
+                </div>
+                <div class="level-info">
+                    <div class="level-title">
+                        <span class="icon-target"></span>
+                        <h3>EASY MODE</h3>
+                    </div>
+                    <p class="level-description">Geometry Dash style controls</p>
+                    <ul class="level-details">
+                        <li>Hold to rise, release to fall</li>
+                        <li>Navigate between static buildings</li>
+                        <li>Perfect for beginners</li>
+                    </ul>
+                    <div class="level-score">
+                        <span>High Score: <span id="easyHighScore">0</span></span>
+                    </div>
+                    <button class="level-btn easy-btn">PLAY EASY</button>
+                </div>
+            </div>
+
+            <div class="level-card hard-level" onclick="startGame('hard')">
+                <div class="level-image">
+                    <img src="images/kokok-ufo.png" alt="UFO" style="width: 120px; height: 120px; object-fit: contain;">
+                </div>
+                <div class="level-info">
+                    <div class="level-title">
+                        <span class="icon-zap"></span>
+                        <h3>HARD MODE</h3>
+                    </div>
+                    <p class="level-description">Flappy Bird with chaotic asteroids</p>
+                    <ul class="level-details">
+                        <li>Tap to flap and fly</li>
+                        <li>Collect blue crystals for points</li>
+                        <li>Dodge red meteorites and purple asteroids</li>
+                    </ul>
+                    <div class="level-score">
+                        <span>High Score: <span id="hardHighScore">0</span></span>
+                    </div>
+                    <button class="level-btn hard-btn">PLAY HARD</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="level-bottom-message">
+            <p>Choose your difficulty and prove your flying skills</p>
+        </div>
+    </div>
+
+    <!-- Customization Screen -->
+    <div id="customizationScreen" class="screen customization-screen hidden">
+        <div class="customization-header">
+            <button class="back-btn" onclick="showMenu()">
+                <span class="icon-back"></span>
+                Back
+            </button>
+            <h1>CUSTOMIZE VEHICLES</h1>
+        </div>
+
+        <div class="customization-container">
+            <div class="vehicles-section ships-section">
+                <h2>SHIPS (Easy Mode)</h2>
+                <div id="shipsContainer" class="vehicles-grid"></div>
+            </div>
+
+            <div class="vehicles-section ufos-section">
+                <h2>UFOs (Hard Mode)</h2>
+                <div id="ufosContainer" class="vehicles-grid"></div>
+            </div>
+        </div>
+
+        <div class="unlock-info">
+            <h3>HOW TO UNLOCK</h3>
+            <div class="unlock-details">
+                <div class="unlock-item">
+                    <h4>Easy Mode Ships</h4>
+                    <p>Score 10, 25, 50, and 100 points to unlock new ships</p>
+                </div>
+                <div class="unlock-item">
+                    <h4>Hard Mode UFOs</h4>
+                    <p>Score 10, 25, 50, and 100 points to unlock new UFOs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboards Screen -->
+    <div id="leaderboardsScreen" class="screen leaderboards-screen hidden">
+        <div class="leaderboards-header">
+            <button class="back-btn" onclick="showMenu()">
+                <span class="icon-back"></span>
+                Back
+            </button>
+            <h1>LEADERBOARDS</h1>
+        </div>
+
+        <div class="leaderboards-container">
+            <div class="leaderboard-section easy-leaderboard">
+                <div class="leaderboard-header">
+                    <span class="icon-target"></span>
+                    <h2>EASY MODE TOP 50</h2>
+                </div>
+                <div class="leaderboard-stats">
+                    <div class="stat-item">
+                        <span>Total Players:</span>
+                        <span id="easyTotalPlayers">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Highest Score:</span>
+                        <span id="easyHighestScore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Average Score:</span>
+                        <span id="easyAverageScore">0</span>
+                    </div>
+                </div>
+                <div class="leaderboard-table">
+                    <div class="table-header">
+                        <span class="pos-col">Pos</span>
+                        <span class="name-col">Player</span>
+                        <span class="score-col">Score</span>
+                        <span class="date-col">Date</span>
+                    </div>
+                    <div id="easyLeaderboardList" class="table-body">
+                        <div class="loading-message">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leaderboard-section hard-leaderboard">
+                <div class="leaderboard-header">
+                    <span class="icon-zap"></span>
+                    <h2>HARD MODE TOP 50</h2>
+                </div>
+                <div class="leaderboard-stats">
+                    <div class="stat-item">
+                        <span>Total Players:</span>
+                        <span id="hardTotalPlayers">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Highest Score:</span>
+                        <span id="hardHighestScore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Average Score:</span>
+                        <span id="hardAverageScore">0</span>
+                    </div>
+                </div>
+                <div class="leaderboard-table">
+                    <div class="table-header">
+                        <span class="pos-col">Pos</span>
+                        <span class="name-col">Player</span>
+                        <span class="score-col">Score</span>
+                        <span class="date-col">Date</span>
+                    </div>
+                    <div id="hardLeaderboardList" class="table-body">
+                        <div class="loading-message">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="leaderboard-bottom-message">
+            <p>Compete with players worldwide and climb to the top!</p>
+        </div>
+    </div>
+
+    <!-- Instructions Screen -->
+    <div id="instructionsScreen" class="screen instructions-screen hidden">
+        <div class="instructions-header">
+            <button class="back-btn" onclick="showMenu()">
+                <span class="icon-back"></span>
+                Back
+            </button>
+            <h1>INSTRUCTIONS</h1>
+        </div>
+
+        <div class="instructions-container">
+            <div class="instruction-card easy-instructions">
+                <div class="instruction-header">
+                    <span class="icon-target"></span>
+                    <h2>EASY MODE</h2>
+                </div>
+                <div class="instruction-content">
+                    <div class="control-info">
+                        <span class="icon-hand"></span>
+                        <span>Hold to rise, release to fall</span>
+                    </div>
+                    <div class="control-demo">
+                        <div class="control-btn hold-btn">HOLD</div>
+                        <span>Mouse/Touch to fly up</span>
+                    </div>
+                    <div class="instruction-details">
+                        <p>🏢 Navigate between static buildings</p>
+                        <p>⭐ Geometry Dash style controls</p>
+                        <p>🎯 Perfect for beginners</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instruction-card hard-instructions">
+                <div class="instruction-header">
+                    <span class="icon-zap"></span>
+                    <h2>HARD MODE</h2>
+                </div>
+                <div class="instruction-content">
+                    <div class="control-info">
+                        <span class="icon-pointer"></span>
+                        <span>Tap to flap and fly</span>
+                    </div>
+                    <div class="control-demo">
+                        <div class="control-btn tap-btn">TAP</div>
+                        <span>Click/Touch to boost up</span>
+                    </div>
+                    <div class="instruction-details">
+                        <p>💎 Collect blue crystals for points</p>
+                        <p>🌌 Dodge chaotic red meteorites</p>
+                        <p>💫 Avoid fast purple asteroids</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="general-rules">
+            <h2>GENERAL RULES</h2>
+            <div class="rules-grid">
+                <div class="rule-item">
+                    <p>🎯 <strong>Objective:</strong> Avoid all obstacles</p>
+                </div>
+                <div class="rule-item">
+                    <p>⭐ <strong>Scoring:</strong> 1 point per obstacle passed</p>
+                </div>
+                <div class="rule-item">
+                    <p>🚀 <strong>Speed:</strong> Increases over time</p>
+                </div>
+                <div class="rule-item">
+                    <p>🔓 <strong>Unlocks:</strong> New vehicles at milestones</p>
+                </div>
+                <div class="rule-item">
+                    <p>⚡ <strong>Pause:</strong> Press ESC anytime</p>
+                </div>
+                <div class="rule-item">
+                    <p>🏆 <strong>Goal:</strong> Beat your high score!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen game-screen hidden">
+        <div class="game-hud">
+            <div class="hud-left">
+                <button class="hud-btn" onclick="pauseGame()">
+                    <span class="icon-back"></span>
+                    Menu
+                </button>
+                <div class="level-indicator">
+                    <span class="icon-trophy"></span>
+                    <span id="currentLevel">EASY MODE</span>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="score-display">
+                    <div class="score-label">SCORE</div>
+                    <div class="score-value" id="gameScore">0</div>
+                </div>
+                <button class="hud-btn" onclick="pauseGame()">
+                    <span class="icon-pause"></span>
+                    Pause
+                </button>
+            </div>
+        </div>
+
+        <div id="gameArea" class="game-area">
+            <canvas id="gameCanvas"></canvas>
+            
+            <!-- Pause Overlay -->
+            <div id="pauseOverlay" class="pause-overlay hidden">
+                <div class="pause-content">
+                    <h2>PAUSED</h2>
+                    <div class="pause-buttons">
+                        <button class="pause-btn continue-btn" onclick="resumeGame()">Continue</button>
+                        <button class="pause-btn menu-btn" onclick="showMenu()">Main Menu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Over Overlay -->
+            <div id="gameOverOverlay" class="game-over-overlay hidden">
+                <div class="game-over-content">
+                    <h2>GAME OVER!</h2>
+                    <p class="final-score">Final Score: <span id="finalScore">0</span></p>
+                    <p class="best-score">Best Score: <span id="bestScore">0</span></p>
+                    
+                    <!-- Leaderboard Position -->
+                    <div id="leaderboardPosition" class="leaderboard-position hidden">
+                        <div class="position-info">
+                            <h3 id="positionTitle">New Record! 🏆</h3>
+                            <p class="position-text">Your position: <span id="playerPosition">#1</span> of <span id="totalPlayers">1</span> players</p>
+                        </div>
+                        
+                        <!-- Top 10 Mini Table -->
+                        <div class="mini-leaderboard">
+                            <h4>🏅 TOP 10</h4>
+                            <div class="mini-table">
+                                <div id="miniLeaderboardList" class="mini-table-body">
+                                    <!-- Dynamically filled -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="unlockNotification" class="unlock-notification hidden">
+                        <p>🎉 New Vehicle Unlocked!</p>
+                        <p>Check customization menu</p>
+                    </div>
+                    <div class="game-over-buttons">
+                        <button class="game-over-btn play-again-btn" onclick="restartGame()">Play Again</button>
+                        <button class="game-over-btn menu-btn" onclick="showMenu()">Main Menu</button>
+                        <button class="game-over-btn leaderboards-btn" onclick="showLeaderboards()">View Leaderboards</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-instructions">
+            <p id="gameInstructionText">Hold to rise, release to fall - Navigate between static buildings!</p>
+        </div>
+    </div>
+
+    <!-- Scripts in correct order -->
+    <script src="js/gameState.js"></script>
+    <script src="js/vehicles.js"></script>
+    <script src="js/gameObjects.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/levelSelect.js"></script>
+    <script src="js/customization.js"></script>
+    <script src="js/instructions.js"></script>
+    <script src="js/leaderboards.js"></script>
+    <script src="js/gameEngine.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

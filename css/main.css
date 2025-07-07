@@ -1,0 +1,304 @@
+/* Main CSS - Base styles and variables */
+:root {
+  --primary-yellow: #fbbf24;
+  --primary-orange: #f97316;
+  --primary-red: #dc2626;
+  --primary-green: #22c55e;
+  --primary-blue: #3b82f6;
+  --primary-purple: #a855f7;
+  --primary-cyan: #22d3ee;
+
+  --text-white: #ffffff;
+  --text-gray: #d1d5db;
+  --text-dark: #374151;
+
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.4);
+
+  --backdrop-blur: blur(8px);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Orbitron", monospace;
+  overflow-x: hidden;
+  background: #000;
+  color: var(--text-white);
+}
+
+/* Screen Management */
+.screen {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Common Button Styles */
+.btn {
+  font-family: "Orbitron", monospace;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Efectos de hover removidos */
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Back Button */
+.back-btn {
+  background: transparent;
+  border: 2px solid var(--primary-cyan);
+  color: var(--primary-cyan);
+  padding: 8px 16px;
+  border-radius: 0;
+  font-family: "Orbitron", monospace;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Efectos de hover removidos */
+
+/* Icons using Unicode symbols */
+.icon-user::before {
+  content: "👤";
+}
+.icon-rocket::before {
+  content: "🚀";
+}
+.icon-play::before {
+  content: "▶️";
+}
+.icon-settings::before {
+  content: "⚙️";
+}
+.icon-book::before {
+  content: "📖";
+}
+.icon-trophy::before {
+  content: "🏆";
+}
+.icon-user-welcome::before {
+  content: "👤";
+}
+.icon-back::before {
+  content: "←";
+}
+.icon-target::before {
+  content: "🎯";
+}
+.icon-zap::before {
+  content: "⚡";
+}
+.icon-hand::before {
+  content: "✋";
+}
+.icon-pointer::before {
+  content: "👆";
+}
+.icon-pause::before {
+  content: "⏸️";
+}
+.icon-lock::before {
+  content: "🔒";
+}
+.icon-check::before {
+  content: "✅";
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Animación glow removida */
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+
+.flex {
+  display: flex;
+}
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.grid {
+  display: grid;
+}
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-3 {
+  gap: 0.75rem;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.gap-6 {
+  gap: 1.5rem;
+}
+.gap-8 {
+  gap: 2rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+.p-4 {
+  padding: 1rem;
+}
+.p-6 {
+  padding: 1.5rem;
+}
+.p-8 {
+  padding: 2rem;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+.m-4 {
+  margin: 1rem;
+}
+.m-6 {
+  margin: 1.5rem;
+}
+.m-8 {
+  margin: 2rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.mt-6 {
+  margin-top: 1.5rem;
+}
+.mt-8 {
+  margin-top: 2rem;
+}

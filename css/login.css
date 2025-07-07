@@ -1,0 +1,236 @@
+/* 📍 POSICIONES DEL LOGIN - EDITAR AQUÍ */
+/* Login Screen Styles */
+.login-screen {
+  background-image: url("../images/login1.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-title {
+  position: absolute;
+  top: 21vh;  /* ⬆️ Logo y título - CAMBIAR AQUÍ */
+  left: 43vw;  /* ⬅️ Alineado a la izquierda - CAMBIAR AQUÍ */
+  transform: translateX(0);  /* Sin centrado automático */
+  text-align: left;  /* Alineado a la izquierda */
+  width: clamp(30vw, 40vh, 50vw);  /* Responsive width */
+  min-width: 20rem;  /* Medida universal */
+  animation: fadeInDown 0.8s ease-out 0.3s both;
+}
+
+.login-logo {
+  max-width: 100%;
+  height: auto;
+  max-height: 12vh;  /* Responsive height */
+  object-fit: contain;
+  filter: drop-shadow(0 0 2vh rgba(251, 191, 36, 0.5));  /* Responsive shadow */
+  margin-bottom: 1vh;  /* Responsive margin */
+}
+
+.login-title p {
+  color: var(--primary-cyan);
+  font-size: clamp(1rem, 2.5vh, 1.5rem);  /* Responsive font size */
+  font-weight: 600;
+  text-shadow: 0 0.3vh 0.6vh rgba(0, 0, 0, 0.8);  /* Responsive shadow */
+}
+
+.login-form {
+  position: absolute;
+  top: 48vh;  /* ⬆️ Formulario - CAMBIAR AQUÍ */
+  left: 40vw;  /* ⬅️ Alineado a la izquierda - CAMBIAR AQUÍ */
+  transform: translateX(0);  /* Sin centrado automático */
+  width: clamp(25vw, 35vh, 40vw);  /* Responsive width */
+  min-width: 18rem;  /* Medida universal */
+  max-width: 25rem;  /* Medida universal */
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 1.5vh;  /* Responsive margin */
+  animation: slideInLeft 0.6s ease-out 0.5s both;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1.5vh;  /* Responsive position */
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary-cyan);
+  z-index: 10;
+  width: 2vh;  /* Responsive width */
+  height: 2vh;  /* Responsive height */
+}
+
+.login-input {
+  width: 100%;
+  height: clamp(5vh, 7vh, 9vh);  /* Responsive height */
+  padding-left: 5vh;  /* Responsive padding */
+  background: transparent;
+  border: 0.3vh solid rgba(34, 211, 238, 0.8);  /* Responsive border */
+  border-radius: 0;
+  color: var(--text-white);
+  font-size: clamp(1rem, 2vh, 1.3rem);  /* Responsive font size */
+  font-weight: 600;
+  font-family: "Orbitron", monospace;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--primary-yellow);
+}
+
+.login-input::placeholder {
+  color: var(--text-gray);
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 0.25rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.start-button {
+  position: absolute;
+  top: 68vh;  /* ⬆️ Botón Start - CAMBIAR AQUÍ */
+  left: 41vw;  /* ⬅️ Alineado a la izquierda - CAMBIAR AQUÍ */
+  transform: translateX(0);  /* Sin centrado automático */
+  width: clamp(20vw, 25vh, 30vw);  /* Responsive width */
+  min-width: 15rem;  /* Medida universal */
+  max-width: 20rem;  /* Medida universal */
+  animation: slideInUp 0.6s ease-out 0.7s both;
+}
+
+.btn-primary {
+  width: 100%;
+  height: clamp(6vh, 8vh, 10vh);  /* Responsive height */
+  background: url("../images/buttons/start.png") center/contain no-repeat;  /* Imagen de botón */
+  border: none;  /* Sin borde */
+  border-radius: 0;
+  color: transparent;  /* Texto invisible */
+  font-size: 0;  /* Sin texto */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;  /* Smooth transition */
+}
+
+/* Efecto hover sutil para el botón */
+.btn-primary:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Efectos de hover removidos */
+
+.bottom-message {
+  position: absolute;
+  bottom: 8vh;  /* ⬇️ Mensaje inferior - CAMBIAR AQUÍ */
+  left: 40vw;  /* ⬅️ Alineado a la izquierda - CAMBIAR AQUÍ */
+  transform: translateX(0);  /* Sin centrado automático */
+  text-align: left;  /* Alineado a la izquierda */
+  animation: fadeIn 0.6s ease-out 1.1s both;
+}
+
+.bottom-message p {
+  color: var(--text-gray);
+  font-size: clamp(0.8rem, 1.5vh, 1rem);  /* Responsive font size */
+  font-weight: 600;
+  text-shadow: 0 0.3vh 0.6vh rgba(0, 0, 0, 0.8);  /* Responsive shadow */
+}
+
+/* Players List */
+.players-list {
+  margin-top: 2vh;  /* Responsive margin */
+  padding: 2vh;  /* Responsive padding */
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  border-radius: 0;
+  animation: fadeIn 0.6s ease-out 0.8s both;
+}
+
+.players-list h4 {
+  color: var(--primary-cyan);
+  font-size: clamp(1rem, 2vh, 1.3rem);  /* Responsive font size */
+  font-weight: 700;
+  margin-bottom: 1.5vh;  /* Responsive margin */
+  text-align: left;  /* Alineado a la izquierda */
+}
+
+.players-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));  /* Responsive columns */
+  gap: 1vh;  /* Responsive gap */
+  max-height: 20vh;  /* Responsive max height */
+  overflow-y: auto;
+}
+
+.player-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 0;
+  padding: 1vh;  /* Responsive padding */
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: left;  /* Alineado a la izquierda */
+}
+
+.player-card:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.player-name {
+  color: var(--text-white);
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.8vh, 1.1rem);  /* Responsive font size */
+  margin-bottom: 0.5vh;  /* Responsive margin */
+}
+
+.player-stats {
+  color: var(--text-gray);
+  font-size: clamp(0.8rem, 1.5vh, 1rem);  /* Responsive font size */
+  line-height: 1.3;
+}
+
+.player-stats span {
+  color: var(--primary-yellow);
+  font-weight: 600;
+}
+
+/* 📱 RESPONSIVE PARA DISPOSITIVOS MÓVILES */
+/* 🔥 COMENTADO - LÓGICAS SEPARADAS */
+/* Las reglas responsive están ahora en responsive.css con alta especificidad */
+/* 
+@media (max-width: 768px) {
+  .login-title {
+    top: 10vh;
+    left: 4vw;
+    width: 90vw;
+  }
+  
+  .login-form {
+    top: 25vh;
+    left: 4vw;
+    width: 90vw;
+  }
+  
+  .start-button {
+    top: 45vh;
+    left: 4vw;
+    width: 90vw;
+  }
+  
+  .bottom-message {
+    left: 4vw;
+    width: 90vw;
+  }
+  
+  .btn-primary:hover {
+    transform: none;
+    filter: none;
+  }
+}
+*/
