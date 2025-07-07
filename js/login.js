@@ -166,3 +166,29 @@ class LoginManager {
 
 // Initialize login manager
 window.loginManager = new LoginManager()
+
+// --- OVERLAY DE ROTACIÓN RESPONSIVE ---
+function shouldShowRotateOverlay() {
+  return window.innerWidth <= 900 || window.matchMedia('(orientation: portrait)').matches;
+}
+
+function showRotateOverlayIfNeeded() {
+  const overlay = document.getElementById('rotateOverlay');
+  if (!overlay) return;
+  if (shouldShowRotateOverlay()) {
+    overlay.classList.remove('hidden');
+  } else {
+    overlay.classList.add('hidden');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  showRotateOverlayIfNeeded();
+  window.addEventListener('resize', showRotateOverlayIfNeeded);
+  const btn = document.getElementById('continueRotateBtn');
+  if (btn) {
+    btn.onclick = function() {
+      document.getElementById('rotateOverlay').classList.add('hidden');
+    };
+  }
+});

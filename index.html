@@ -21,6 +21,16 @@
 <body>
     <!-- Login Screen -->
     <div id="loginScreen" class="screen login-screen">
+        <!-- OVERLAY DE ROTACIÓN SOLO RESPONSIVE -->
+        <div id="rotateOverlay" class="rotate-overlay hidden">
+            <video src="video/rotate.mp4" autoplay loop muted playsinline class="rotate-video"></video>
+            <div class="rotate-overlay-bg"></div>
+            <div class="rotate-overlay-content">
+                <h2>Please enable rotation and rotate your phone for a better experience</h2>
+                <button id="continueRotateBtn" class="rotate-continue-btn">CONTINUE</button>
+            </div>
+        </div>
+        <!-- FIN OVERLAY -->
         <div class="login-title">
             <img src="images/logo.png" alt="KOKOK THE ROACH" class="login-logo">
             <p>Ready to take flight!</p>
