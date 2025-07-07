@@ -415,53 +415,12 @@
   }
 }
 
-/* Ajustes para orientación landscape en móviles - POSICIONES CONSISTENTES */
-@media screen and (max-height: 500px) and (orientation: landscape) {
-  .menu-logo {
-    max-height: 10vh;
-    margin-bottom: 0.5vh;
-  }
-  
-  .welcome-message {
-    font-size: clamp(0.8rem, 1.8vh, 1.1rem);
-  }
-  
-  /* Mantener las posiciones principales */
-  .btn-play {
-    top: 22vh;  /* Consistente con desktop */
-  }
-  
-  .btn-customize {
-    top: 34vh;  /* Consistente con desktop */
-  }
-  
-  .btn-instructions {
-    top: 46vh;  /* Consistente con desktop */
-  }
-  
-    .btn-leaderboards {
-    top: 58vh !important;  /* ACTUALIZADO - Gap uniforme de 12vh */
-  }
-
-  .high-scores {
-    top: 27vh;  /* Consistente con desktop */
-    right: 20vw;  /* ⬅️ Consistente con posiciones principales */
-  }
-
-  .unlocked-vehicles {
-    top: 65vh;  /* Separado del botón leaderboards (58vh + 7vh) */
-    right: 30vw;  /* ⬅️ Consistente con desktop */
-  }
-  
-  .menu-bottom-message {
-    bottom: 2vh; /* ⬇️ Consistente con desktop - más abajo */
-  }
-  
-  .menu-btn {
-    height: clamp(4vh, 5vh, 6vh);
-    font-size: clamp(0.8rem, 1.5vh, 1rem);
-  }
-}
+/* 🚫 REGLAS LANDSCAPE MOVIDAS A responsive.css PARA EVITAR CONFLICTOS */
+/* Todas las reglas de orientación landscape ahora se manejan centralizadamente en responsive.css */
+/* @media screen and (max-height: 500px) and (orientation: landscape) {
+  COMENTADO: Estas reglas ahora están en responsive.css para evitar conflictos
+  y tener control centralizado de todos los ajustes responsive
+} */
 
 /* Ajustes para pantallas muy anchas */
 @media screen and (min-aspect-ratio: 16/9) {

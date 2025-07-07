@@ -73,6 +73,13 @@ async function startGame(level) {
     // Asegurar que los overlays estén ocultos
     const pauseOverlay = document.getElementById("pauseOverlay")
     const gameOverOverlay = document.getElementById("gameOverOverlay")
+    const gameScreen = document.getElementById("gameScreen")
+    
+    // 🎯 QUITAR CLASE PARA MOSTRAR HUD Y INSTRUCCIONES
+    if (gameScreen) {
+      gameScreen.classList.remove("game-over-active")
+    }
+    
     if (pauseOverlay) pauseOverlay.classList.add("hidden")
     if (gameOverOverlay) gameOverOverlay.classList.add("hidden")
     

@@ -24,7 +24,7 @@ class GameEngine {
     this.JUMP_FORCE_EASY = -10 // Stronger jump for easy mode
     this.JUMP_FORCE_HARD = -12 // Much stronger jump for hard mode (UFO)
     this.RISE_FORCE = -0.5
-    this.PLAYER_SIZE = 60 // Tamaño base del jugador - se ajustará dinámicamente
+    this.PLAYER_SIZE = 60 // Base player size - will adjust dynamically
 
     // Dynamic canvas size
     this.GAME_WIDTH = 800
@@ -48,26 +48,26 @@ class GameEngine {
     if (gameArea && this.canvas) {
       const rect = gameArea.getBoundingClientRect()
       
-      // Detectar si es móvil
+      // Detect if mobile
       const isMobile = window.innerWidth <= 767
       const isExtraSmall = window.innerWidth <= 479
       const isLandscape = window.innerHeight <= 600 && window.innerWidth > window.innerHeight
       
-      // Dimensiones adaptativas según el dispositivo - MÁS PANORÁMICAS
-      if (isExtraSmall) {
-        this.GAME_WIDTH = Math.max(rect.width, 350)  // Más ancho
-        this.GAME_HEIGHT = Math.max(rect.height, 180) // Menos alto
-      } else if (isMobile) {
-        this.GAME_WIDTH = Math.max(rect.width, 400)  // Más ancho 
-        this.GAME_HEIGHT = Math.max(rect.height, 200) // Menos alto
-      } else if (isLandscape) {
-        this.GAME_WIDTH = Math.max(rect.width, 600)  // Más ancho
-        this.GAME_HEIGHT = Math.max(rect.height, 280) // Menos alto
-      } else {
-        // Desktop - dimensiones panorámicas
-        this.GAME_WIDTH = Math.max(rect.width, 1000) // Más ancho
-        this.GAME_HEIGHT = Math.max(rect.height, 500) // Menos alto
-      }
+      // Adaptive dimensions according to device - MORE PANORAMIC
+              if (isExtraSmall) {
+          this.GAME_WIDTH = Math.max(rect.width, 350)  // Wider
+          this.GAME_HEIGHT = Math.max(rect.height, 180) // Less tall
+        } else if (isMobile) {
+          this.GAME_WIDTH = Math.max(rect.width, 400)  // Wider 
+          this.GAME_HEIGHT = Math.max(rect.height, 200) // Less tall
+        } else if (isLandscape) {
+          this.GAME_WIDTH = Math.max(rect.width, 600)  // Wider
+          this.GAME_HEIGHT = Math.max(rect.height, 400) // More height for buildings
+        } else {
+          // Desktop - panoramic dimensions
+          this.GAME_WIDTH = Math.max(rect.width, 1000) // Wider
+          this.GAME_HEIGHT = Math.max(rect.height, 600) // More height for buildings
+        }
 
       // Validate calculated dimensions
       if (!isFinite(this.GAME_WIDTH) || !isFinite(this.GAME_HEIGHT) || 
@@ -79,20 +79,20 @@ class GameEngine {
           rectHeight: rect.height
         })
         
-        // Fallback responsive - panorámico
+        // Fallback responsive - panoramic
         if (isExtraSmall) {
           this.GAME_WIDTH = 350
-          this.GAME_HEIGHT = 180
+          this.GAME_HEIGHT = 250 // More height for buildings
         } else if (isMobile) {
           this.GAME_WIDTH = 400
-          this.GAME_HEIGHT = 200
+          this.GAME_HEIGHT = 300 // More height for buildings
         } else {
           this.GAME_WIDTH = 1000
-          this.GAME_HEIGHT = 500
+          this.GAME_HEIGHT = 600 // More height for buildings
         }
       }
 
-      // Calcular tamaño del jugador proporcionalmente
+      // Calculate player size proportionally
       this.updatePlayerSize()
 
       console.log('Canvas dimensions - Width:', this.GAME_WIDTH, 'Height:', this.GAME_HEIGHT, 'Mobile:', isMobile)
@@ -104,7 +104,7 @@ class GameEngine {
       this.canvas.style.width = "100%"
       this.canvas.style.height = "100%"
       
-      // Asegurar que el canvas sea visible
+      // Ensure canvas is visible
       this.canvas.style.display = "block"
       this.canvas.style.background = this.level === "easy" 
         ? "linear-gradient(to bottom, #87ceeb, #98fb98)" 
@@ -115,15 +115,15 @@ class GameEngine {
   }
 
   updatePlayerSize() {
-    // Calcular tamaño del jugador basado en las dimensiones del canvas
+    // Calculate player size based on canvas dimensions
     const baseSize = 60
-    // Usar un promedio entre ancho y alto para mejor escalado panorámico
-    const scaleFactor = Math.min(this.GAME_WIDTH / 1000, this.GAME_HEIGHT / 500) // Basado en las dimensiones de referencia
+    // Use average between width and height for better panoramic scaling
+    const scaleFactor = Math.min(this.GAME_WIDTH / 1000, this.GAME_HEIGHT / 500) // Based on reference dimensions
     this.PLAYER_SIZE = Math.max(25, Math.min(120, baseSize * scaleFactor))
   }
 
   setupOrientationControl() {
-    // Detectar si es móvil y si la API está disponible
+    // Detect if mobile and if API is available
     this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768
     this.orientationSupported = screen.orientation && screen.orientation.lock
     
@@ -141,7 +141,7 @@ class GameEngine {
       await screen.orientation.lock('landscape')
       console.log('🔄 Orientation locked to landscape')
       
-      // Esperar un momento para que se complete la rotación
+      // Wait a moment for rotation to complete
       setTimeout(() => {
         this.updateCanvasSize()
       }, 500)
@@ -158,7 +158,7 @@ class GameEngine {
       await screen.orientation.lock('portrait')
       console.log('🔄 Orientation locked to portrait')
       
-      // Esperar un momento para que se complete la rotación
+      // Wait a moment for rotation to complete
       setTimeout(() => {
         this.updateCanvasSize()
       }, 500)
@@ -217,17 +217,17 @@ class GameEngine {
   handleInput(isPressed) {
     if (!this.gameRunning || this.gamePaused || !this.player) return
 
-    // Si el juego no ha empezado, empezar con la primera input
+    // If game hasn't started, start with first input
     if (!this.gameStarted && isPressed) {
       this.gameStarted = true
-      // Establecer el tiempo inicial para dar un período de gracia antes del primer obstáculo
-      this.lastObstacleTime = Date.now() + 1000 // 1 segundo extra de gracia
+      // Set initial time to give grace period before first obstacle
+      this.lastObstacleTime = Date.now() + 1000 // 1 second extra grace
       
-      // Actualizar instrucciones
+      // Update instructions
       const instructionText =
         this.level === "easy"
-          ? "¡Mantén presionado para subir, suelta para bajar!"
-          : "¡Toca para impulsarte! Recoge cristales azules brillantes"
+          ? "Hold down to rise, release to fall!"
+          : "Tap to boost! Collect blue glowing crystals"
       const gameInstructionElement = document.getElementById("gameInstructionText")
       if (gameInstructionElement) {
         gameInstructionElement.textContent = instructionText
@@ -241,9 +241,9 @@ class GameEngine {
         // Easy mode: Hold to rise
         this.player.isHolding = isPressed
       } else {
-        // Hard mode: UFO tap to boost - MEJORADO
+        // Hard mode: UFO tap to boost - IMPROVED
         if (isPressed) {
-          this.player.velocityY = -4.5 // Impulso más fuerte para UFO
+          this.player.velocityY = -4.5 // Stronger boost for UFO
         }
       }
     }
@@ -252,29 +252,36 @@ class GameEngine {
   startGame(level) {
     console.log('Starting game with level:', level)
     
-    // ACTUALIZAR EL GAMESTATE PRIMERO
+    // UPDATE GAMESTATE FIRST
     window.gameState.currentLevel = level
     
     this.level = level
     this.gameRunning = true
-    this.gamePaused = false // ASEGURAR QUE NO ESTÉ PAUSADO
-    this.gameStarted = false // El juego no empieza hasta que el usuario presione una tecla
+    this.gamePaused = false // ENSURE NOT PAUSED
+    this.gameStarted = false // Game doesn't start until user presses a key
     this.gameStartTime = Date.now()
     this.score = 0
-    this.baseGameSpeed = level === "easy" ? 10 : 5.5
+    this.baseGameSpeed = level === "easy" ? 7.5 : 5.5
     this.gameSpeed = this.baseGameSpeed
-    this.maxGameSpeed = level === "easy" ? 20 : 16
+    this.maxGameSpeed = level === "easy" ? 16 : 16
     this.obstacles = []
     this.particles = []
     this.lastGapPosition = "middle"
     this.previousScore = 0 // Para trackear incrementos de velocidad
     this.levelCompleted = false // Para controlar cuando se completa el nivel
-    this.shieldActive = false // Estado del escudo
-    this.shieldEndTime = 0 // Cuándo termina el escudo
+    this.shieldActive = false // Shield state
+    this.shieldEndTime = 0 // When shield ends
 
-    // Limpiar overlays de pausa/game over que puedan estar activos
+    // Clear pause/game over overlays that may be active
     const pauseOverlay = document.getElementById("pauseOverlay")
     const gameOverOverlay = document.getElementById("gameOverOverlay")
+    const gameScreen = document.getElementById("gameScreen")
+    
+    // 🎯 QUITAR CLASE PARA MOSTRAR HUD Y INSTRUCCIONES
+    if (gameScreen) {
+      gameScreen.classList.remove("game-over-active")
+    }
+    
     if (pauseOverlay) pauseOverlay.classList.add("hidden")
     if (gameOverOverlay) gameOverOverlay.classList.add("hidden")
 
@@ -285,17 +292,17 @@ class GameEngine {
 
     // Initialize player using a safe position - optimized for panoramic view
     const safeY = this.GAME_HEIGHT / 2
-    const playerX = this.GAME_WIDTH * 0.15 // Posicionar al jugador más hacia la izquierda (15% del ancho)
+    const playerX = this.GAME_WIDTH * 0.15 // Position player more to the left (15% of width)
     this.player = new window.Player(playerX, safeY, this.level, this.PLAYER_SIZE)
     console.log('Player initialized:', this.player)
     console.log('Player position - x:', this.player.x, 'y:', this.player.y)
     console.log('Current vehicle for level', this.level, ':', window.gameState.getCurrentVehicle())
     
-    // Asegurar que no esté pausado después de la inicialización
+    // Ensure not paused after initialization
     this.gamePaused = false
     this.gameRunning = true
 
-    // 🔄 FORZAR ORIENTACIÓN HORIZONTAL EN MÓVILES
+    // 🔄 FORCE HORIZONTAL ORIENTATION ON MOBILES
     this.forceHorizontalOrientation()
 
     // Update game area background
@@ -322,8 +329,8 @@ class GameEngine {
     // Update instructions
     const instructionText =
       level === "easy"
-        ? "¡Presiona ESPACIO o CLICK para empezar! Mantén presionado para subir"
-        : "¡Presiona ESPACIO o CLICK para empezar! Recolecta cristales azules"
+        ? "Press SPACE or CLICK to start! Hold down to rise"
+        : "Press SPACE or CLICK to start! Collect blue crystals"
     const gameInstructionElement = document.getElementById("gameInstructionText")
     if (gameInstructionElement) {
       gameInstructionElement.textContent = instructionText
@@ -346,19 +353,19 @@ class GameEngine {
   }
 
   update() {
-    // Verificar si el jugador ya fue inicializado
+    // Check if player is already initialized
     if (!this.player) {
       console.log('Player not yet initialized, skipping update')
       return
     }
 
-    // Solo actualizar si el juego ha empezado
+    // Only update if game has started
     if (!this.gameStarted) {
-      // Mantener el jugador en posición inicial con suave flotación
+      // Keep player in initial position with smooth floating
       const centerY = this.GAME_HEIGHT / 2
       this.player.y = centerY + Math.sin(Date.now() * 0.003) * 10
-      this.player.x = 100 // Mantener posición X fija
-      this.player.velocityY = 0 // Sin velocidad vertical
+      this.player.x = 100 // Keep X position fixed
+      this.player.velocityY = 0 // No vertical velocity
       return
     }
 
@@ -410,31 +417,31 @@ class GameEngine {
     const now = Date.now()
     
     if (this.level === "easy") {
-      // Primer obstáculo al segundo, luego intervalos variables según velocidad
+      // First obstacle after one second, then variable intervals based on speed
       const timeSinceStart = now - this.lastObstacleTime
       const isFirstObstacle = this.obstacles.length === 0
       
       if (isFirstObstacle) {
-        // Primer obstáculo al segundo
+        // First obstacle after one second
         if (timeSinceStart < 1000) return
       } else {
-        // Intervalos EXTREMADAMENTE frecuentes para acción súper intensa
-        const progressFactor = Math.min(this.score / 40, 1) // 0 a 1 basado en 40 puntos (súper rápido)
-        const baseInterval = 1200 - progressFactor * 600 // De 1.2s a 0.6s (EXTREMADAMENTE frecuente)
-        const speedMultiplier = Math.max(0.25, 1 - (this.gameSpeed - this.baseGameSpeed) * 0.06)
-        const randomVariation = Math.random() * 150 + 50 // Variación 50-200ms (menos variación)
+        // More balanced intervals for better gameplay
+        const progressFactor = Math.min(this.score / 50, 1) // 0 to 1 based on 50 points (slower progression)
+        const baseInterval = 1800 - progressFactor * 800 // From 1.8s to 1.0s (more reasonable frequency)
+        const speedMultiplier = Math.max(0.4, 1 - (this.gameSpeed - this.baseGameSpeed) * 0.04)
+        const randomVariation = Math.random() * 200 + 100 // Variation 100-300ms (more variation)
         const interval = baseInterval * speedMultiplier + randomVariation
         
         if (timeSinceStart < interval) return
       }
     } else {
-      // Modo difícil - intervalos desafiantes pero manejables
+      // Hard mode - challenging but manageable intervals
       const timeSinceStart = now - this.lastObstacleTime
-      const difficultyLevel = Math.floor(this.score / 10) // Nivel de dificultad cada 10 puntos
-      const baseInterval = 1000 // Cada 1 segundo base
-      const progressFactor = Math.min(this.score / 10, 1) // Escala más gradual
-      const difficultyReduction = difficultyLevel * 50 // Reducir 50ms por nivel
-      const interval = Math.max(400, baseInterval - progressFactor * 400 - difficultyReduction) // Mínimo 400ms
+      const difficultyLevel = Math.floor(this.score / 10) // Difficulty level every 10 points
+      const baseInterval = 1000 // Every 1 second base
+      const progressFactor = Math.min(this.score / 10, 1) // More gradual scale
+      const difficultyReduction = difficultyLevel * 50 // Reduce 50ms per level
+      const interval = Math.max(400, baseInterval - progressFactor * 400 - difficultyReduction) // Minimum 400ms
       
       if (timeSinceStart < interval) return
     }
@@ -449,92 +456,92 @@ class GameEngine {
   }
 
   generateStaticBuildings() {
-    // Progresión SÚPER intensa para máximo desafío
-    const difficultyFactor = Math.min(this.score / 30, 1) // 0 a 1 basado en 30 puntos (súper activo)
+    // SUPER intense progression for maximum challenge
+    const difficultyFactor = Math.min(this.score / 30, 1) // 0 to 1 based on 30 points (super active)
     const speedFactor = (this.gameSpeed - this.baseGameSpeed) / (this.maxGameSpeed - this.baseGameSpeed)
-    const scoreLevel = Math.floor(this.score / 50) // Cada 50 puntos = nuevo nivel de patrones
+    const scoreLevel = Math.floor(this.score / 50) // Every 50 points = new pattern level
     
-    // Seleccionar patrón según la puntuación
+    // Select pattern based on score
     const patternChance = Math.random()
     
     if (this.score >= 200 && patternChance < 0.15) {
-      // Patrón "Laberinto" (puntuación muy alta)
+      // "Labyrinth" pattern (very high score)
       this.generateLabyrinthPattern()
     } else if (this.score >= 150 && patternChance < 0.25) {
-      // Patrón "Zigzag" (puntuación alta)
+      // "Zigzag" pattern (high score)
       this.generateZigzagPattern()
     } else if (this.score >= 100 && patternChance < 0.35) {
-      // Patrón "Escalera" (puntuación media-alta)
+      // "Staircase" pattern (medium-high score)
       this.generateStairPattern()
     } else if (this.score >= 50 && patternChance < 0.45) {
-      // Patrón "Túnel estrecho" (puntuación media)
+      // "Narrow tunnel" pattern (medium score)
       this.generateNarrowTunnelPattern()
     } else {
-      // Patrón clásico mejorado
+      // Improved classic pattern
       this.generateClassicPattern(difficultyFactor, speedFactor)
     }
   }
 
   generateClassicPattern(difficultyFactor, speedFactor) {
-    // Probabilidad de obstáculos múltiples MUY alta
-    const multipleChance = difficultyFactor * 0.6 + speedFactor * 0.4 // Máximo 100%!
+    // VERY high probability of multiple obstacles
+    const multipleChance = difficultyFactor * 0.6 + speedFactor * 0.4 // Maximum 100%!
     
-    // Decidir si generar múltiples edificios
-    if (Math.random() < multipleChance && this.score > 20) { // Múltiples edificios desde los 20 puntos
-      // Probabilidad ALTA de múltiples edificios
-      const shouldGenerateSecond = Math.random() < 0.85 // 85% chance de segundo edificio
-      const shouldGenerateThird = Math.random() < 0.6 && this.score > 60 // 60% chance de tercero después de 60 puntos
-      const shouldGenerateFourth = Math.random() < 0.4 && this.score > 120 // 40% chance de cuarto después de 120 puntos
+    // Decide whether to generate multiple buildings
+    if (Math.random() < multipleChance && this.score > 20) { // Multiple buildings from 20 points
+      // HIGH probability of multiple buildings
+      const shouldGenerateSecond = Math.random() < 0.85 // 85% chance of second building
+      const shouldGenerateThird = Math.random() < 0.6 && this.score > 60 // 60% chance of third after 60 points
+      const shouldGenerateFourth = Math.random() < 0.4 && this.score > 120 // 40% chance of fourth after 120 points
       
-      // Primer edificio
+      // First building
       this.generateBuildingPair()
       
-      // Segundo edificio con espaciado más cerrado
+      // Second building with better spacing
       if (shouldGenerateSecond) {
-        const minSpacing = 400 + speedFactor * 100 // Mínimo 400px, hasta 500px (ajustado para edificios anchos)
-        const spacing = minSpacing + Math.random() * 150 // Variación reducida
+        const minSpacing = 600 + speedFactor * 150 // Minimum 600px, up to 750px (more separation)
+        const spacing = minSpacing + Math.random() * 200 // More variation
         this.generateBuildingPair(spacing)
       }
       
-      // Tercer edificio
+      // Third building
       if (shouldGenerateThird && shouldGenerateSecond) {
-        const extraSpacing = 700 + speedFactor * 150 // Mínimo 700px, hasta 850px (ajustado para edificios anchos)
-        const spacing = extraSpacing + Math.random() * 200
+        const extraSpacing = 900 + speedFactor * 200 // Minimum 900px, up to 1100px (more separation)
+        const spacing = extraSpacing + Math.random() * 300
         this.generateBuildingPair(spacing)
       }
       
-      // Cuarto edificio (solo en puntuaciones muy altas)
+      // Fourth building (only at very high scores)
       if (shouldGenerateFourth && shouldGenerateThird && shouldGenerateSecond) {
-        const megaSpacing = 1000 + speedFactor * 200 // Mínimo 1000px, hasta 1200px (ajustado para edificios anchos)
-        const spacing = megaSpacing + Math.random() * 250
+        const megaSpacing = 1200 + speedFactor * 250 // Minimum 1200px, up to 1450px (more separation)
+        const spacing = megaSpacing + Math.random() * 400
         this.generateBuildingPair(spacing)
       }
     } else {
-      // Edificio simple
+      // Simple building
       this.generateBuildingPair()
     }
   }
 
   generateNarrowTunnelPattern() {
-    // Túnel estrecho con gaps más pequeños
-    const narrowGapReduction = 50 + Math.random() * 50 // Reducir gap 50-100px
+    // Narrow tunnel with smaller gaps
+    const narrowGapReduction = 50 + Math.random() * 50 // Reduce gap 50-100px
     this.generateBuildingPair(0, narrowGapReduction)
     
-    // Segundo túnel estrecho cerca
-    const spacing = 350 + Math.random() * 100
+    // Second narrow tunnel with better spacing
+    const spacing = 500 + Math.random() * 150
     this.generateBuildingPair(spacing, narrowGapReduction)
     
                 console.log("🚧 Narrow Tunnel Pattern generated")
   }
 
   generateStairPattern() {
-    // Escalera ascendente o descendente
+    // Ascending or descending staircase
     const isAscending = Math.random() < 0.5
     const baseHeight = 100
     const stepSize = 60
     
     for (let i = 0; i < 4; i++) {
-      const spacing = i * 280
+      const spacing = i * 400 // Increased spacing from 280 to 400
       const heightModifier = isAscending ? i * stepSize : (3 - i) * stepSize
       this.generateBuildingPair(spacing, 0, heightModifier)
     }
@@ -543,11 +550,11 @@ class GameEngine {
   }
 
   generateZigzagPattern() {
-    // Patrón zigzag con gaps alternos
+    // Zigzag pattern with alternating gaps
     const positions = ['top', 'bottom', 'top', 'bottom']
     
     for (let i = 0; i < 4; i++) {
-      const spacing = i * 300
+      const spacing = i * 450 // Increased spacing from 300 to 450
       const forcedPosition = positions[i]
       this.generateBuildingPair(spacing, 0, 0, forcedPosition)
     }
@@ -556,13 +563,13 @@ class GameEngine {
   }
 
   generateLabyrinthPattern() {
-    // Patrón complejo tipo laberinto
+    // Complex labyrinth-type pattern with better spacing
     const patterns = [
       { spacing: 0, gap: 0, height: 50, position: 'top' },
-      { spacing: 200, gap: -30, height: -50, position: 'bottom' },
-      { spacing: 400, gap: -50, height: 30, position: 'top' },
-      { spacing: 600, gap: -20, height: -30, position: 'bottom' },
-      { spacing: 800, gap: 0, height: 0, position: 'top' }
+      { spacing: 350, gap: -30, height: -50, position: 'bottom' },
+      { spacing: 700, gap: -50, height: 30, position: 'top' },
+      { spacing: 1050, gap: -20, height: -30, position: 'bottom' },
+      { spacing: 1400, gap: 0, height: 0, position: 'top' }
     ]
     
     patterns.forEach(pattern => {
@@ -573,16 +580,19 @@ class GameEngine {
   }
 
   generateBuildingPair(xOffset = 0, gapReduction = 0, heightModifier = 0, forcedPosition = null) {
-    const minHeight = 80
-    const maxHeight = 400
+    // Adaptive building heights based on canvas size
+    // 🎯 RESPONSIVE HORIZONTAL - Alturas más pequeñas para landscape
+    const isLandscapeMode = window.innerHeight <= 600 && window.innerWidth > window.innerHeight
+    const minHeight = Math.max(40, Math.min(80, this.GAME_HEIGHT * (isLandscapeMode ? 0.12 : 0.15))) // Reducido en landscape
+    const maxHeight = Math.max(200, Math.min(400, this.GAME_HEIGHT * (isLandscapeMode ? 0.45 : 0.6))) // Reducido en landscape
     
-    // Usar posición forzada o aleatoria
+    // Use forced or random position
     let gapPosition
     if (forcedPosition) {
       gapPosition = forcedPosition
     } else {
-      // Generación SÚPER ALEATORIA - "así de loco"
-      // Alternar completamente aleatorio entre arriba y abajo
+      // SUPER RANDOM generation - "that crazy"
+      // Completely random alternation between top and bottom
       const positions = ["top", "bottom"]
       gapPosition = positions[Math.floor(Math.random() * positions.length)]
     }
@@ -591,35 +601,36 @@ class GameEngine {
     
     let topHeight, gap
     
-    // Gaps cómodos para navegación y recolección
+    // Comfortable gaps for navigation and collection - adaptive to canvas size
     const speedFactor = Math.min((this.gameSpeed - this.baseGameSpeed) / (this.maxGameSpeed - this.baseGameSpeed), 1)
-    const extraGap = speedFactor * 120 // 120px extra cuando esté a máxima velocidad
-    const baseGap = 300 + Math.random() * 100 + extraGap
+    const extraGap = speedFactor * (this.GAME_HEIGHT * 0.2) // 20% of canvas height extra when at maximum speed
+    const baseGap = Math.max(150, this.GAME_HEIGHT * 0.4) + Math.random() * (this.GAME_HEIGHT * 0.15) + extraGap
     
     if (gapPosition === "top") {
-      // Gap arriba - edificio de abajo muy alto
-      topHeight = minHeight + Math.random() * 80 + heightModifier // Edificio superior pequeño + modificador
-      gap = Math.max(200, baseGap - gapReduction) // Gap ajustado pero con mínimo
+      // Gap at top - bottom building very tall
+      topHeight = minHeight + Math.random() * (maxHeight - minHeight) * 0.3 + heightModifier // Small top building + modifier
+      gap = Math.max(this.GAME_HEIGHT * 0.25, baseGap - gapReduction) // Adjusted gap but with minimum 25% of canvas height
     } else {
-      // Gap abajo - edificio de arriba muy alto
-      topHeight = maxHeight - Math.random() * 80 + heightModifier // Edificio superior grande + modificador
-      gap = Math.max(200, baseGap - gapReduction) // Gap ajustado pero con mínimo
+      // Gap at bottom - top building very tall
+      topHeight = maxHeight - Math.random() * (maxHeight - minHeight) * 0.3 + heightModifier // Large top building + modifier
+      gap = Math.max(this.GAME_HEIGHT * 0.25, baseGap - gapReduction) // Adjusted gap but with minimum 25% of canvas height
     }
     
-    // Asegurar límites realistas
+    // Ensure realistic limits
     topHeight = Math.max(minHeight, Math.min(maxHeight, topHeight))
 
     const xPos = this.GAME_WIDTH + xOffset
     
-    // Dimensiones diferenciadas para mejor aspecto visual
-    const airBuildingWidth = 100  // Más estrecho para obstáculos aéreos
-    const groundBuildingWidth = 140  // Más ancho para edificios del suelo
+    // Differentiated dimensions for better visual aspect
+    // 🎯 RESPONSIVE HORIZONTAL - Tamaños más pequeños para landscape
+    const airBuildingWidth = isLandscapeMode ? 80 : 100  // Más estrecho en landscape
+    const groundBuildingWidth = isLandscapeMode ? 100 : 140  // Más estrecho en landscape para evitar que sean demasiado grandes
     
-    // Ajustar altura de obstáculos aéreos para mejor proporción
+    // Adjust aerial obstacle height for better proportion
     let adjustedTopHeight = topHeight
     if (gapPosition === "bottom") {
-      // Si el gap está abajo, el edificio de arriba es muy alto
-      // Reducir un poco la altura para mejor proporción con las imágenes
+      // If gap is at bottom, top building is very tall
+      // Reduce height slightly for better proportion with images
       adjustedTopHeight = Math.min(topHeight, 350)
     }
 
@@ -635,44 +646,53 @@ class GameEngine {
       return
     }
 
-    // Calculate bottom building height and validate
-    const bottomY = adjustedTopHeight + gap
-    const bottomHeight = this.GAME_HEIGHT - bottomY
+    // Calculate bottom building height and validate - auto-adjust if needed
+    let bottomY = adjustedTopHeight + gap
+    let bottomHeight = this.GAME_HEIGHT - bottomY
     
-    if (bottomHeight <= 0) {
-      console.warn('Bottom building height is invalid:', {
-        bottomHeight: bottomHeight,
-        topHeight: adjustedTopHeight,
-        gap: gap,
-        GAME_HEIGHT: this.GAME_HEIGHT
-      })
-      return
+    // Auto-adjust if bottom building would be too small or negative
+    if (bottomHeight <= minHeight) {
+      console.log('Auto-adjusting building dimensions for canvas height:', this.GAME_HEIGHT)
+      // Redistribute the space better
+      adjustedTopHeight = Math.min(adjustedTopHeight, this.GAME_HEIGHT * 0.3) // Max 30% for top building
+      gap = Math.max(this.GAME_HEIGHT * 0.2, Math.min(gap, this.GAME_HEIGHT * 0.4)) // Gap between 20-40% of canvas height
+      bottomY = adjustedTopHeight + gap
+      bottomHeight = this.GAME_HEIGHT - bottomY
+      
+      // If still invalid, use a simple safe configuration
+      if (bottomHeight <= minHeight) {
+        adjustedTopHeight = this.GAME_HEIGHT * 0.25 // 25% for top
+        gap = this.GAME_HEIGHT * 0.3 // 30% for gap
+        bottomY = adjustedTopHeight + gap
+        bottomHeight = this.GAME_HEIGHT - bottomY // 45% for bottom
+        console.log('Using safe building configuration')
+      }
     }
 
-    // Crear edificios con dimensiones optimizadas
+    // Create buildings with optimized dimensions
     this.obstacles.push(new window.Building(xPos, 0, airBuildingWidth, adjustedTopHeight, "top"))
     this.obstacles.push(
       new window.Building(xPos, bottomY, groundBuildingWidth, bottomHeight, "bottom"),
     )
     
-    // 15% chance de generar algo en el gap (gema o power-up) - reducido más
+    // 15% chance to generate something in the gap (gem or power-up) - reduced more
     if (Math.random() < 0.15) {
       const itemSize = 25
       const itemX = xPos + airBuildingWidth / 2 - itemSize / 2
       
-      // 12% chance de power-up de escudo, 88% chance de gema - aumentado escudo
+      // 12% chance of shield power-up, 88% chance of gem - increased shield
       const isShieldPowerUp = Math.random() < 0.12
       
       if (isShieldPowerUp) {
-        // Crear power-up de escudo que CAE DEL CIELO
+        // Create shield power-up that FALLS FROM THE SKY
         const shieldPowerUp = {
           x: itemX,
-          y: 0, // Empieza en la parte superior
+          y: 0, // Starts at the top
           size: itemSize,
           type: "shield",
           collected: false,
           passed: false,
-          velocityY: 2, // Velocidad de caída
+          velocityY: 2, // Fall velocity
           render: function(ctx) {
             if (this.collected) return
             
@@ -719,36 +739,36 @@ class GameEngine {
           update: function(gameSpeed) {
             this.x -= gameSpeed
             if (this.velocityY) {
-              this.y += this.velocityY // Caer del cielo
+              this.y += this.velocityY // Fall from the sky
             }
           }
         }
         
         this.obstacles.push(shieldPowerUp)
       } else {
-        // Crear gema EN EL CENTRO DEL GAP - diferentes tipos
-        const gemY = adjustedTopHeight + gap / 2 - itemSize / 2 // Posición Y correcta en el gap
+        // Create gem IN THE CENTER OF THE GAP - different types
+        const gemY = adjustedTopHeight + gap / 2 - itemSize / 2 // Correct Y position in the gap
         
-        // Determinar tipo de gema (50% azul, 35% amarilla, 15% roja) - reducido azul
+        // Determine gem type (50% blue, 35% yellow, 15% red) - reduced blue
         const gemRand = Math.random()
         let gemType, gemValue, gemColor, shadowColor, strokeColor
         
         if (gemRand < 0.50) {
-          // Gema azul - 1 punto
+          // Blue gem - 1 point
           gemType = "gem_blue"
           gemValue = 1
           gemColor = "#00BFFF"
           shadowColor = "#00BFFF" 
           strokeColor = "#0099FF"
         } else if (gemRand < 0.85) {
-          // Gema amarilla - 2 puntos
+          // Yellow gem - 2 points
           gemType = "gem_yellow"
           gemValue = 2
           gemColor = "#FFD700"
           shadowColor = "#FFD700"
           strokeColor = "#FFA500"
         } else {
-          // Gema roja - 5 puntos
+          // Red gem - 5 points
           gemType = "gem_red"
           gemValue = 5
           gemColor = "#FF4444"
@@ -977,27 +997,27 @@ class GameEngine {
         if (shouldLog) console.log('Generated SHIELD power-up')
         
       } else {
-        // Crear gema - diferentes tipos
-        // Determinar tipo de gema (50% azul, 35% amarilla, 15% roja)
+        // Create gem - different types
+        // Determine gem type (50% blue, 35% yellow, 15% red)
         const gemRand = Math.random()
         let gemType, gemValue, gemColor, shadowColor, strokeColor
         
         if (gemRand < 0.50) {
-          // Gema azul - 1 punto
+          // Blue gem - 1 point
           gemType = "gem_blue"
           gemValue = 1
           gemColor = "#00BFFF"
           shadowColor = "#00BFFF" 
           strokeColor = "#0099FF"
         } else if (gemRand < 0.85) {
-          // Gema amarilla - 2 puntos
+          // Yellow gem - 2 points
           gemType = "gem_yellow"
           gemValue = 2
           gemColor = "#FFD700"
           shadowColor = "#FFD700"
           strokeColor = "#FFA500"
         } else {
-          // Gema roja - 5 puntos
+          // Red gem - 5 points
           gemType = "gem_red"
           gemValue = 5
           gemColor = "#FF4444"
@@ -1240,7 +1260,7 @@ class GameEngine {
       // Modo fácil: incrementar cada 3 puntos (SÚPER activo)
       const pointsForIncrement = 3
       const speedIncrement = Math.floor(this.score / pointsForIncrement)
-      const incrementValue = 0.5 // Incrementos moderados
+      const incrementValue = 0.3 // Slower increments
       const targetSpeed = Math.min(this.baseGameSpeed + speedIncrement * incrementValue, this.maxGameSpeed)
       
       // Solo actualizar si cambió
@@ -1443,23 +1463,29 @@ class GameEngine {
   }
 
   drawUI() {
-    // Draw score
-    this.ctx.save()
-    this.ctx.fillStyle = "#ffffff"
-    this.ctx.font = "24px Orbitron"
-    this.ctx.textAlign = "left"
-    this.ctx.fillText(`Score: ${this.score}`, 20, 40)
+    // 🎯 NO DIBUJAR HUD EN CANVAS CUANDO ESTÉ EN GAME OVER
+    const gameOverActive = !this.gameRunning && !this.levelCompleted
     
-    // Draw speed indicator
-    this.ctx.font = "16px Orbitron"
-    this.ctx.fillText(`Speed: ${this.gameSpeed.toFixed(1)}`, 20, 70)
-    
-    // Draw shield indicator if active
-    if (this.shieldActive) {
-      const timeLeft = Math.max(0, (this.shieldEndTime - Date.now()) / 1000)
-      this.ctx.fillStyle = "#00BFFF"
-      this.ctx.font = "18px Orbitron"
-      this.ctx.fillText(`🛡️ Shield: ${timeLeft.toFixed(1)}s`, 20, 100)
+    if (!gameOverActive) {
+      // Draw score
+      this.ctx.save()
+      this.ctx.fillStyle = "#ffffff"
+      this.ctx.font = "24px Orbitron"
+      this.ctx.textAlign = "left"
+      this.ctx.fillText(`Score: ${this.score}`, 20, 40)
+      
+      // Draw speed indicator
+      this.ctx.font = "16px Orbitron"
+      this.ctx.fillText(`Speed: ${this.gameSpeed.toFixed(1)}`, 20, 70)
+      
+      // Draw shield indicator if active
+      if (this.shieldActive) {
+        const timeLeft = Math.max(0, (this.shieldEndTime - Date.now()) / 1000)
+        this.ctx.fillStyle = "#00BFFF"
+        this.ctx.font = "18px Orbitron"
+        this.ctx.fillText(`🛡️ Shield: ${timeLeft.toFixed(1)}s`, 20, 100)
+      }
+      this.ctx.restore()
     }
     
     // Draw waiting message if game hasn't started
@@ -1476,8 +1502,6 @@ class GameEngine {
     if (!this.gameRunning && !this.levelCompleted) {
       this.drawGameOverScreen()
     }
-    
-    this.ctx.restore()
   }
 
   drawWaitingMessage() {
@@ -1491,20 +1515,20 @@ class GameEngine {
     this.ctx.textBaseline = "middle"
     
     const message = this.level === "easy" 
-      ? "¡Presiona ESPACIO o CLICK para empezar!" 
-      : "¡Presiona ESPACIO o CLICK para empezar!"
+      ? "Press SPACE or CLICK to start!" 
+      : "Press SPACE or CLICK to start!"
     
     this.ctx.fillText(message, this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2)
     
     // Add instructions
     this.ctx.font = "18px Orbitron"
     if (this.level === "easy") {
-      this.ctx.fillText("Mantén presionado para subir", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 50)
-      this.ctx.fillText("Recoge gemas doradas y power-ups azules", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 80)
-      this.ctx.fillText("El escudo te protege por 5 segundos", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 110)
+      this.ctx.fillText("Hold down to rise", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 50)
+      this.ctx.fillText("Collect golden gems and blue power-ups", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 80)
+      this.ctx.fillText("Shield protects you for 5 seconds", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 110)
     } else {
-      this.ctx.fillText("Toca para impulsar hacia arriba", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 50)
-      this.ctx.fillText("Recolecta cristales azules brillantes", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 80)
+      this.ctx.fillText("Tap to boost upward", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 50)
+      this.ctx.fillText("Collect glowing blue crystals", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 80)
     }
     
     this.ctx.restore()
@@ -1527,7 +1551,7 @@ class GameEngine {
     this.ctx.fillText(`Final Score: ${this.score}`, this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2)
     
     this.ctx.font = "18px Orbitron"
-    this.ctx.fillText("Presiona ESPACIO o CLICK para reiniciar", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 40)
+    this.ctx.fillText("Press SPACE or CLICK to restart", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 40)
     
     this.ctx.restore()
   }
@@ -1554,8 +1578,8 @@ class GameEngine {
     this.ctx.textBaseline = "middle"
     this.ctx.strokeStyle = "#ffffff"
     this.ctx.lineWidth = 2
-    this.ctx.strokeText("¡NIVEL COMPLETADO!", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 - 80)
-    this.ctx.fillText("¡NIVEL COMPLETADO!", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 - 80)
+    this.ctx.strokeText("LEVEL COMPLETED!", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 - 80)
+    this.ctx.fillText("LEVEL COMPLETED!", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 - 80)
     
     // Score
     this.ctx.fillStyle = "#ffffff"
@@ -1569,11 +1593,11 @@ class GameEngine {
     // Instructions
     this.ctx.fillStyle = "#ffff00"
     this.ctx.font = "20px Orbitron"
-    this.ctx.fillText("¡Prepárate para el MODO DIFÍCIL!", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 60)
+    this.ctx.fillText("Get ready for HARD MODE!", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 60)
     
     this.ctx.fillStyle = "#ffffff"
     this.ctx.font = "16px Orbitron"
-    this.ctx.fillText("Presiona ESPACIO o CLICK para continuar", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 100)
+    this.ctx.fillText("Press SPACE or CLICK to continue", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 100)
     
     this.ctx.restore()
   }
@@ -1633,6 +1657,13 @@ class GameEngine {
     this.submitScoreToLeaderboards()
 
     const gameOverOverlay = document.getElementById("gameOverOverlay")
+    const gameScreen = document.getElementById("gameScreen")
+    
+    // 🎯 AGREGAR CLASE PARA OCULTAR HUD Y INSTRUCCIONES
+    if (gameScreen) {
+      gameScreen.classList.add("game-over-active")
+    }
+    
     if (gameOverOverlay) {
       gameOverOverlay.classList.remove("hidden")
     }
@@ -1733,6 +1764,12 @@ function resumeGame() {
 function restartGame() {
   const gameOverOverlay = document.getElementById("gameOverOverlay")
   const pauseOverlay = document.getElementById("pauseOverlay")
+  const gameScreen = document.getElementById("gameScreen")
+
+  // 🎯 QUITAR CLASE PARA MOSTRAR HUD Y INSTRUCCIONES
+  if (gameScreen) {
+    gameScreen.classList.remove("game-over-active")
+  }
 
   if (gameOverOverlay) gameOverOverlay.classList.add("hidden")
   if (pauseOverlay) pauseOverlay.classList.add("hidden")

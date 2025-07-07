@@ -466,16 +466,35 @@
 
 /* Landscape orientation adjustments */
 @media (max-height: 600px) and (orientation: landscape) {
-  .login-title {
-    top: 10vh;
+  /* 🎯 LOGIN SCREEN RESPONSIVE HORIZONTAL - ELEMENTOS CENTRADOS Y BAJADOS */
+  
+  .login-screen .login-title {
+    top: 22vh !important;  /* ⬇️ Bajado más */
+    left: 69% !important;  /* 🎯 Centrado */
+    transform: translateX(-50%) !important;  /* 🎯 Centrado perfecto */
   }
 
-  .login-form {
-    top: 30vh;
+
+
+  .login-screen .login-form {
+    top: 40vh !important;  /* ⬇️ Bajado más */
+    left: 50% !important;  /* 🎯 Centrado */
+    transform: translateX(-50%) !important;  /* 🎯 Centrado perfecto */
+    width: 25vw !important;  /* ⬅️➡️ Más corto horizontalmente */
+    min-width: 200px !important;
+    max-width: 300px !important;
   }
 
-  .start-button {
-    top: 50vh;
+  .login-screen .start-button {
+    top: 55vh !important;  /* ⬇️ Bajado más */
+    left: 50% !important;  /* 🎯 Centrado */
+    transform: translateX(-50%) !important;  /* 🎯 Centrado perfecto */
+  }
+
+  .login-screen .bottom-message {
+    bottom: 8vh !important;  /* ⬇️ Bajado más */
+    left: 30vw !important;  /* ⬅️ Más hacia la izquierda */
+    transform: none !important;  /* Sin centrado automático */
   }
 
   /* 🎯 LANDSCAPE RESPONSIVE - MANTENER ORDEN DESKTOP */
@@ -486,34 +505,47 @@
   }
 
   .welcome-message {
-    top: 7.5vh !important;  /* ⬆️ Mantener posición desktop */
+    top: 6vh !important;  /* ⬆️ Mantener posición desktop */
     left: 59.5% !important;  /* ⬅️ Mantener posición desktop */
   }
 
-  .btn-play {
-    top: 20vh;
+  /* 🎯 BOTONES CENTRADOS COMO EL LOGO - MODO LANDSCAPE */
+  .menu-screen .menu-buttons {
+    left: 17.5% !important;
+    transform: translateX(-50%) !important;
+    width: clamp(20vw, 25vh, 30vw) !important;
   }
 
-  .btn-customize {
-    top: 30vh;
+  .menu-screen .btn-play {
+    top: 22vh !important;  /* ⬆️ Gap más uniforme */
   }
 
-  .btn-instructions {
-    top: 40vh;
+  .menu-screen .btn-customize {
+    top: 32vh !important;  /* ⬆️ Gap reducido de 10vh */
   }
 
-  .btn-leaderboards {
-    top: 58vh !important;  /* ⬆️ ACTUALIZADO - Gap uniforme de 12vh */
+  .menu-screen .btn-instructions {
+    top: 42vh !important;  /* ⬆️ Gap reducido de 10vh */
   }
 
-  .high-scores {
-    top: 21vh !important;  /* ⬆️ ACTUALIZADO - Consistente con desktop */
-    right: 30vw !important;  /* ⬅️ ACTUALIZADO - Consistente con desktop */
+  .menu-screen .btn-leaderboards {
+    top: 52vh !important;  /* ⬆️ Gap reducido de 10vh */
   }
 
-  .unlocked-vehicles {
-    top: 65vh !important;  /* ⬆️ Separado del botón leaderboards (58vh + 7vh) */
-    right: 30vw !important;  /* ⬅️ Consistente con desktop */
+  /* 🎯 LETRA MÁS PEQUEÑA PARA HIGH SCORES Y UNLOCKED VEHICLES */
+  .menu-screen .high-scores .stats-title,
+  .menu-screen .unlocked-vehicles .stats-title {
+    font-size: clamp(0.8rem, 1.8vh, 1.1rem) !important;  /* ⬇️⬇️ Letra mucho más pequeña en landscape */
+  }
+
+  .menu-screen .high-scores {
+    top: 17vh !important;  /* ⬆️ ACTUALIZADO - Consistente con desktop */
+    right: 25vw !important;  /* ⬅️ ACTUALIZADO - Consistente con desktop */
+  }
+
+  .menu-screen .unlocked-vehicles {
+    top: 48vh !important;  /* ⬆️ Ajustado para seguir el nuevo spacing de botones */
+    right: 25vw !important;  /* ⬅️ Consistente con desktop */
   }
 
   .menu-bottom-message {
@@ -546,6 +578,49 @@
 
   .game-instructions p {
     font-size: 0.875rem;
+  }
+
+  /* 🎯 GAME OVER EN 2 COLUMNAS PARA RESPONSIVE HORIZONTAL */
+  .game-over-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    max-width: 95vw !important;
+    padding: 2rem !important;
+    gap: 1rem !important;
+  }
+
+  .game-over-content h2 {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Contenedor horizontal para las 2 columnas de puntuaciones */
+  .game-over-content .final-score,
+  .game-over-content .best-score {
+    display: inline-block !important;
+    margin: 0 2rem !important;  /* Espaciado horizontal entre las puntuaciones */
+    vertical-align: top !important;
+  }
+
+  /* NEW RECORD alineado con las puntuaciones */
+  .game-over-content .unlock-notification {
+    margin: 1rem 0 !important;  /* Espaciado vertical moderado */
+    text-align: center !important;
+  }
+
+  /* Botones debajo de todo, centrados */
+  .game-over-content .game-over-buttons {
+    margin-top: 1.5rem !important;
+    justify-content: center !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+  }
+
+  .game-over-content .game-over-btn {
+    width: 180px !important;  /* Ancho fijo para botones */
+    height: 45px !important;
   }
 }
 

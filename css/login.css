@@ -28,10 +28,7 @@
 }
 
 .login-title p {
-  color: var(--primary-cyan);
-  font-size: clamp(1rem, 2.5vh, 1.5rem);  /* Responsive font size */
-  font-weight: 600;
-  text-shadow: 0 0.3vh 0.6vh rgba(0, 0, 0, 0.8);  /* Responsive shadow */
+  display: none !important;  /* 🚫 ELIMINADO - "Ready to take flight!" oculto en TODOS los modos */
 }
 
 .login-form {

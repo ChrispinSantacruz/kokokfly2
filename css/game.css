@@ -416,3 +416,9 @@
   }
 }
 
+/* 🎯 OCULTAR HUD Y INSTRUCCIONES CUANDO GAME OVER ESTÉ ACTIVO */
+.game-screen.game-over-active .game-hud,
+.game-screen.game-over-active .game-instructions {
+  display: none !important;
+}
+

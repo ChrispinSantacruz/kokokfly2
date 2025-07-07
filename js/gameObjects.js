@@ -16,29 +16,36 @@ class BuildingImagePreloader {
   preloadAllImages() {
     console.log("Precargando imágenes building...")
     
-    // Precargar imágenes building (1-6)
+    // Precargar imágenes building aéreos (1-6) - NUEVAS IMÁGENES
+    const aereoImages = ['bear-05.png', 'building-01.png', 'building-02.png', 'building-03.png', 'building-04.png', 'building-06.png']
     for (let i = 1; i <= 6; i++) {
       const key = `building-${i.toString().padStart(2, '0')}`
       const image = new Image()
       
       const loadPromise = new Promise((resolve, reject) => {
         image.onload = () => {
-          console.log(`✓ Imagen building ${i} cargada`)
+          console.log(`✓ Imagen building aéreo ${i} cargada`)
           resolve()
         }
         image.onerror = () => {
-          console.warn(`✗ Error cargando imagen building ${i}`)
+          console.warn(`✗ Error cargando imagen building aéreo ${i}`)
           reject()
         }
       })
       
       this.loadingPromises.push(loadPromise)
       this.images.building[key] = image
-      image.src = `images/obstaculos/building-${i.toString().padStart(2, '0')}.png`
+      image.src = `images/obstaculos_AEREOS/${aereoImages[i-1]}`
     }
     
-    // Precargar imágenes de suelo (1-4)
-    for (let i = 1; i <= 4; i++) {
+    // Precargar imágenes de suelo (1-12) - NUEVAS IMÁGENES
+    const sueloImages = [
+      'kokok_building-07.png', 'kokok_building-08.png', 'kokok_building-09.png', 
+      'kokok_building-10.png', 'kokok_building-11.png', 'kokok_building-12.png',
+      'kokok_building-13.png', 'kokok_building-14.png', 'kokok_building-15.png',
+      'kokok_building-16.png', 'kokok_building-17.png', 'kokok_building-18.png'
+    ]
+    for (let i = 1; i <= 12; i++) {
       const key = `ground-${i}`
       const image = new Image()
       
@@ -55,7 +62,7 @@ class BuildingImagePreloader {
       
       this.loadingPromises.push(loadPromise)
       this.images.ground[key] = image
-      image.src = `images/obstaculo${i}piso.png`
+      image.src = `images/obstaculos_SUELO/${sueloImages[i-1]}`
     }
     
     // Esperar a que todas las imágenes se carguen
@@ -76,7 +83,7 @@ class BuildingImagePreloader {
   
   getRandomGroundImage() {
     if (!this.isLoaded) return null
-    const randomIndex = Math.floor(Math.random() * 4) + 1
+    const randomIndex = Math.floor(Math.random() * 12) + 1
     const key = `ground-${randomIndex}`
     return this.images.ground[key]
   }
@@ -103,7 +110,7 @@ window.debugBuildings = {
       console.log("✅ Building preloader existe");
       console.log("📊 Estado de carga:", preloader.isLoaded ? "✅ COMPLETO" : "❌ PENDIENTE");
       console.log("🏢 Imágenes building:", Object.keys(preloader.images.building).length, "/ 6");
-      console.log("🏠 Imágenes suelo:", Object.keys(preloader.images.ground).length, "/ 4");
+      console.log("🏠 Imágenes suelo:", Object.keys(preloader.images.ground).length, "/ 12");
       console.log("🔄 Promesas de carga:", preloader.loadingPromises.length);
       
       console.log("\n🏢 IMÁGENES BUILDING:");
@@ -431,13 +438,20 @@ class GameBuilding {
     this.originalWidth = 0
     this.originalHeight = 0
     
-    // Seleccionar imagen aleatoria según el lado
+    // Seleccionar imagen aleatoria según el lado - NUEVAS IMÁGENES
     if (this.side === "bottom") {
-      const randomIndex = Math.floor(Math.random() * 4) + 1
-      this.image.src = `images/obstaculo${randomIndex}piso.png`
+      const sueloImages = [
+        'kokok_building-07.png', 'kokok_building-08.png', 'kokok_building-09.png', 
+        'kokok_building-10.png', 'kokok_building-11.png', 'kokok_building-12.png',
+        'kokok_building-13.png', 'kokok_building-14.png', 'kokok_building-15.png',
+        'kokok_building-16.png', 'kokok_building-17.png', 'kokok_building-18.png'
+      ]
+      const randomIndex = Math.floor(Math.random() * 12)
+      this.image.src = `images/obstaculos_SUELO/${sueloImages[randomIndex]}`
     } else {
-      const randomIndex = Math.floor(Math.random() * 6) + 1
-      this.image.src = `images/obstaculos/building-${randomIndex.toString().padStart(2, '0')}.png`
+      const aereoImages = ['bear-05.png', 'building-01.png', 'building-02.png', 'building-03.png', 'building-04.png', 'building-06.png']
+      const randomIndex = Math.floor(Math.random() * 6)
+      this.image.src = `images/obstaculos_AEREOS/${aereoImages[randomIndex]}`
     }
     
     this.image.onload = () => {
