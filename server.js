@@ -4,10 +4,15 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const mongoose = require('mongoose');
+const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 
 // Importar modelo MongoDB
 const Score = require('./models');
+
+// Configuración del bot de Telegram
+const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || '7666259492:AAFPw42DO9NTZS7i0Fl_4TxvYuCDWo3tv6w';
+const bot = new TelegramBot(TELEGRAM_TOKEN, {polling: true});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -95,6 +100,181 @@ function getLocalIP() {
   }
   return 'localhost';
 }
+
+// Función para obtener leaderboards para el bot
+async function getLeaderboardsForBot() {
+  try {
+    let leaderboards;
+    
+    if (isMongoConnected) {
+      // Usar MongoDB
+      leaderboards = await Score.getLeaderboards();
+    } else {
+      // Fallback a archivo JSON
+      const scores = readScores();
+      
+      const easyTop = scores.easy
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      
+      const hardTop = scores.hard
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      
+      leaderboards = {
+        easy: easyTop,
+        hard: hardTop
+      };
+    }
+    
+    return leaderboards;
+  } catch (error) {
+    console.error('Error getting leaderboards for bot:', error);
+    return { easy: [], hard: [] };
+  }
+}
+
+// Función para formatear mensaje de leaderboards
+function formatLeaderboardMessage(leaderboards) {
+  const skyCity = leaderboards.easy.slice(0, 10);
+  const cryptoSpace = leaderboards.hard.slice(0, 10);
+  
+  let message = "🏆 **KOKOK THE ROACH - CHAMPIONS LEADERBOARD** 🏆\n\n";
+  
+  // Sky City Leaderboard
+  message += "🏙️ **SKY CITY CHAMPIONS** 🚀\n";
+  message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+  
+  if (skyCity.length > 0) {
+    skyCity.forEach((player, index) => {
+      const position = index + 1;
+      let trophy = "";
+      
+      if (position === 1) trophy = "🥇";
+      else if (position === 2) trophy = "🥈";
+      else if (position === 3) trophy = "🥉";
+      else trophy = `${position}.`;
+      
+      message += `${trophy} **${player.playerName}** - ${player.score} pts\n`;
+    });
+  } else {
+    message += "No champions yet... Be the first! 🎯\n";
+  }
+  
+  message += "\n🌌 **CRYPTO SPACE LEGENDS** 🛸\n";
+  message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+  
+  if (cryptoSpace.length > 0) {
+    cryptoSpace.forEach((player, index) => {
+      const position = index + 1;
+      let trophy = "";
+      
+      if (position === 1) trophy = "🥇";
+      else if (position === 2) trophy = "🥈";
+      else if (position === 3) trophy = "🥉";
+      else trophy = `${position}.`;
+      
+      message += `${trophy} **${player.playerName}** - ${player.score} pts\n`;
+    });
+  } else {
+    message += "No legends yet... Conquer the space! 🚀\n";
+  }
+  
+  message += "\n💎 **CHALLENGE ACCEPTED?** 💎\n";
+  message += "Play now and claim your spot among the champions!\n";
+  message += "🎮 Ready to fly with Kokok The Roach? 🪳✨";
+  
+  return message;
+}
+
+// Comandos del bot de Telegram
+bot.onText(/\/start/, (msg) => {
+  const chatId = msg.chat.id;
+  const welcomeMessage = `
+🪳 **Welcome to KOKOK THE ROACH!** 🪳
+
+🎮 **The Ultimate Flying Challenge!**
+
+🏙️ **Sky City** - Navigate through skyscrapers with precision controls!
+🌌 **Crypto Space** - Dodge asteroids in the cosmic void!
+
+Commands:
+/leaderboards - See the top champions 🏆
+/start - Show this welcome message 🎮
+
+Ready to become a legend? Let's fly! 🚀✨
+  `;
+  
+  bot.sendMessage(chatId, welcomeMessage, { parse_mode: 'Markdown' });
+});
+
+bot.onText(/\/leaderboards/, async (msg) => {
+  const chatId = msg.chat.id;
+  
+  try {
+    // Enviar mensaje de "cargando"
+    await bot.sendMessage(chatId, "🔄 Loading champions data... Please wait! ⏳");
+    
+    // Obtener leaderboards
+    const leaderboards = await getLeaderboardsForBot();
+    
+    // Formatear mensaje
+    const message = formatLeaderboardMessage(leaderboards);
+    
+    // Intentar diferentes estrategias de envío de imagen
+    const optimizedImagePath = path.join(__dirname, 'images', 'bot-optimized.png');
+    const originalImagePath = path.join(__dirname, 'images', 'bot.png');
+    
+    // Elegir qué imagen usar
+    let imageToUse = fs.existsSync(optimizedImagePath) ? optimizedImagePath : originalImagePath;
+    
+    try {
+      // Estrategia 1: Imagen con caption
+      await bot.sendPhoto(chatId, imageToUse, {
+        caption: message,
+        parse_mode: 'Markdown'
+      });
+      console.log(`📱 Leaderboards with image (caption) sent to Telegram chat ${chatId}`);
+    } catch (imageError) {
+      console.log(`⚠️  Caption method failed: ${imageError.message}`);
+      
+      try {
+        // Estrategia 2: Imagen y texto por separado
+        await bot.sendPhoto(chatId, imageToUse);
+        await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+        console.log(`📱 Leaderboards with image (separate) sent to Telegram chat ${chatId}`);
+      } catch (separateError) {
+        console.log(`⚠️  Separate method failed: ${separateError.message}`);
+        
+        // Estrategia 3: Solo texto con emojis épicos
+        const epicMessage = `🏆🪳💰 **EPIC VICTORY CELEBRATION!** 💰🪳🏆
+        
+👑 **KOKOK THE ROACH CHAMPIONS** 👑
+🎉 *The most legendary pilots in the galaxy!* 🎉
+
+${message}
+
+🚀✨ **JOIN THE LEGEND!** ✨🚀`;
+        
+        await bot.sendMessage(chatId, epicMessage, { parse_mode: 'Markdown' });
+        console.log(`📱 Leaderboards (epic text-only) sent to Telegram chat ${chatId}`);
+      }
+    }
+    
+  } catch (error) {
+    console.error('Error sending leaderboards to Telegram:', error);
+    await bot.sendMessage(chatId, "❌ Sorry, there was an error fetching the leaderboards. Please try again later! 🛠️");
+  }
+});
+
+// Manejar errores del bot
+bot.on('error', (error) => {
+  console.error('Telegram bot error:', error);
+});
+
+bot.on('polling_error', (error) => {
+  console.error('Telegram polling error:', error);
+});
 
 // Inicializar archivo al arrancar
 initializeScoresFile();
@@ -455,10 +635,20 @@ async function startServer() {
     console.log(`   🛜 Network: All devices on the same WiFi`);
     console.log(`   💾 Database: ${isMongoConnected ? 'MongoDB ✅' : 'JSON fallback ⚠️'}`);
     console.log(`   🔗 MongoDB URI: ${MONGODB_URI.replace(/\/\/.*@/, '//***:***@')}`);
+    console.log(`   🤖 Telegram Bot: ${TELEGRAM_TOKEN ? '✅ Active' : '❌ Not configured'}`);
     
     if (!isMongoConnected) {
       console.log(`\n⚠️  MongoDB not connected - using JSON file fallback`);
       console.log(`   💡 To use persistent storage, configure MONGODB_URI environment variable`);
+    }
+    
+    // Inicializar bot de Telegram
+    if (TELEGRAM_TOKEN) {
+      console.log(`\n🤖 Telegram Bot Features:`);
+      console.log(`   📱 Commands: /start, /leaderboards`);
+      console.log(`   🏆 Real-time leaderboards via Telegram`);
+      console.log(`   🎮 Game stats and champions data`);
+      console.log(`   💬 Bot is ready to receive commands!`);
     }
   });
 }

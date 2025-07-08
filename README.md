@@ -4,13 +4,41 @@ A thrilling space adventure game featuring Kokok The Roach, with two exciting ga
 
 ## 🎮 Game Features
 
-- **Easy Mode**: Geometry Dash style controls - Hold to rise, release to fall
-- **Hard Mode**: Flappy Bird style controls - Tap to flap and fly
+- **Sky City Mode**: Geometry Dash style controls - Hold to rise, release to fall
+- **Crypto Space Mode**: Flappy Bird style controls - Tap to flap and fly
 - **Advanced Pattern System**: Unlock complex obstacle patterns as you score higher
 - **Vehicle Customization**: Unlock new ships and UFOs by achieving high scores
 - **Multiplayer Leaderboards**: Compete with players worldwide
+- **Telegram Bot Integration**: Get real-time leaderboards via Telegram
 - **Responsive Design**: Play on desktop, mobile, and tablets
 - **Automatic Orientation Control**: Smart rotation on mobile devices
+
+## 🤖 Telegram Bot Features
+
+Get real-time game stats and leaderboards directly in Telegram!
+
+### Bot Commands
+- `/start` - Welcome message and game overview
+- `/leaderboards` - See top 10 champions from both Sky City and Crypto Space modes
+
+### Features
+- **Real-time Leaderboards**: Get instant access to current top players
+- **Epic Victory Images**: Celebration artwork with Kokok holding trophy
+- **Beautiful Formatting**: Clean, readable leaderboard display with emojis
+- **Dual Mode Support**: See champions from both game modes
+- **Always Updated**: Connects directly to the game's live database
+
+### How to Use
+1. Search for the Kokok The Roach bot on Telegram
+2. Send `/start` to get started
+3. Use `/leaderboards` to see current champions with epic celebration image
+4. Challenge yourself to reach the top!
+
+### Bot Features
+- **Smart Image Handling**: Automatically optimizes images for Telegram
+- **Fallback System**: Multiple strategies ensure leaderboards always work
+- **Epic Celebrations**: Victory images with Kokok holding trophy
+- **Real-time Data**: Always shows current game statistics
 
 ## 🚀 Quick Start
 
@@ -47,14 +75,14 @@ npm run server
 
 ## 🎯 Game Modes
 
-### Easy Mode - Building Navigation
+### Sky City - Building Navigation
 - Hold mouse/touch to rise
 - Release to fall
 - Navigate between static buildings
 - Advanced patterns unlock at 50, 100, 150, 200 points
 - Pattern types: Tunnel, Staircase, Zigzag, Maze
 
-### Hard Mode - Asteroid Field
+### Crypto Space - Asteroid Field
 - Tap/click to boost upward
 - Gravity pulls you down constantly
 - Collect blue crystals for bonus points
@@ -64,17 +92,15 @@ npm run server
 
 ## 🏆 Unlock System
 
-### Ships (Easy Mode)
-- **Score 10**: Unlock Vehicle #2
-- **Score 25**: Unlock Vehicle #3
-- **Score 50**: Unlock Vehicle #4
-- **Score 100**: Unlock Vehicle #5
+### Ships (Sky City Mode)
+- **Classic Rocket**: Available by default
+- **Score 100**: Unlock Classic Delorean
+- **Score 300**: Unlock Gold Rocket
 
-### UFOs (Hard Mode)
-- **Score 10**: Unlock UFO #2
-- **Score 25**: Unlock UFO #3
-- **Score 50**: Unlock UFO #4
-- **Score 100**: Unlock UFO #5
+### UFOs (Crypto Space Mode)
+- **Basic UFO**: Available by default
+- **Score 50**: Unlock Gold Delorean
+- **Score 150**: Unlock Gold UFO
 
 ## 🔧 Technical Features
 
