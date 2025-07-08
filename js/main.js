@@ -58,10 +58,21 @@ class ScreenManager {
         if (window.menuManager) {
           window.menuManager.updateMenu()
         }
+        // Reproducir música del menú
+        if (window.audioManager) {
+          // Dar un pequeño delay para asegurar que el contexto esté listo
+          setTimeout(() => {
+            window.audioManager.playMenuMusic()
+          }, 200)
+        }
         break
 
       case "game":
         // Game screen is handled by gameEngine
+        // Detener música del menú
+        if (window.audioManager) {
+          window.audioManager.stopAllBackgroundMusic()
+        }
         break
     }
   }
@@ -114,10 +125,59 @@ class App {
       console.error("Game error:", e.error)
     })
 
+    // Reanudar contexto de audio con primera interacción del usuario
+    const resumeAudio = async () => {
+      if (window.audioManager) {
+        await window.audioManager.resumeAudioContext()
+        
+        // Ocultar mensaje de activación de audio
+        const audioMessage = document.getElementById('audioActivationMessage')
+        if (audioMessage) {
+          audioMessage.classList.add('hidden')
+          setTimeout(() => {
+            audioMessage.style.display = 'none'
+          }, 300)
+        }
+        
+        // Intentar reproducir música del menú si estamos en el menú
+        if (window.screenManager && window.screenManager.getCurrentScreen() === 'menu') {
+          setTimeout(() => {
+            window.audioManager.playMenuMusic()
+          }, 100)
+        }
+        
+        console.log('🎵 Sistema de audio activado tras interacción del usuario')
+      }
+      // Remover el event listener después de la primera interacción
+      document.removeEventListener("click", resumeAudio)
+      document.removeEventListener("touchstart", resumeAudio)
+      document.removeEventListener("keydown", resumeAudio)
+    }
+    
+    document.addEventListener("click", resumeAudio)
+    document.addEventListener("touchstart", resumeAudio)
+    document.addEventListener("keydown", resumeAudio)
+
+    // Probar sistema de audio después de 2 segundos
+    setTimeout(() => {
+      if (window.testAudioSystem) {
+        window.testAudioSystem()
+      }
+    }, 2000)
+
     // Add visibility change handling (pause game when tab is hidden)
     document.addEventListener("visibilitychange", () => {
       if (document.hidden && window.gameEngine && window.gameEngine.gameRunning && !window.gameEngine.gamePaused) {
         window.gameEngine.togglePause()
+      }
+      
+      // Pausar o reanudar audio según la visibilidad
+      if (window.audioManager) {
+        if (document.hidden) {
+          window.audioManager.pauseAllAudio()
+        } else {
+          window.audioManager.resumeAllAudio()
+        }
       }
     })
 

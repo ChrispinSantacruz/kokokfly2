@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/instructions.css">
     <link rel="stylesheet" href="css/leaderboards.css">
     <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/audio.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
@@ -60,7 +61,7 @@
         </form>
 
         <div class="start-button">
-            <button type="submit" form="loginForm" class="btn-primary">
+            <button type="submit" form="loginForm" class="btn-primary btn-with-sound" onclick="console.log('🔘 Click en START ADVENTURE'); playButtonSound()">
                 <span class="icon-rocket"></span>
                 START ADVENTURE!
             </button>
@@ -68,6 +69,11 @@
 
         <div class="bottom-message">
             <p>Join Kokok The Roach on his epic flight adventure</p>
+        </div>
+
+        <!-- Audio activation message -->
+        <div id="audioActivationMessage" class="audio-activation-message">
+            <p>🎵 Click anywhere to activate audio</p>
         </div>
     </div>
 
@@ -83,28 +89,28 @@
         </div>
 
         <div class="menu-buttons btn-play">
-            <button class="menu-btn btn-play-style" onclick="showLevelSelect()">
+            <button class="menu-btn btn-play-style btn-with-sound" onclick="console.log('🔘 Click en PLAY'); playButtonSound(); showLevelSelect()">
                 <span class="icon-play"></span>
                 PLAY
             </button>
         </div>
 
         <div class="menu-buttons btn-customize">
-            <button class="menu-btn btn-customize-style" onclick="showCustomization()">
+            <button class="menu-btn btn-customize-style btn-with-sound" onclick="console.log('🔘 Click en CUSTOMIZE'); playButtonSound(); showCustomization()">
                 <span class="icon-settings"></span>
                 CUSTOMIZE
             </button>
         </div>
 
         <div class="menu-buttons btn-instructions">
-            <button class="menu-btn btn-instructions-style" onclick="showInstructions()">
+            <button class="menu-btn btn-instructions-style btn-with-sound" onclick="console.log('🔘 Click en INSTRUCTIONS'); playButtonSound(); showInstructions()">
                 <span class="icon-book"></span>
                 INSTRUCTIONS
             </button>
         </div>
 
         <div class="menu-buttons btn-leaderboards">
-            <button class="menu-btn btn-leaderboards-style" onclick="showLeaderboards()">
+            <button class="menu-btn btn-leaderboards-style btn-with-sound" onclick="console.log('🔘 Click en LEADERBOARDS'); playButtonSound(); showLeaderboards()">
                 <span class="icon-trophy"></span>
                 LEADERBOARDS
             </button>
@@ -117,11 +123,11 @@
                     <h3 class="stats-title">HIGH SCORES</h3>
                 </div>
                 <div class="score-item score-easy">
-                    <span class="score-label">Easy Mode</span>
+                    <span class="score-label">Sky City</span>
                     <span class="score-value" id="easyScore">0</span>
                 </div>
                 <div class="score-item score-hard">
-                    <span class="score-label">Hard Mode</span>
+                    <span class="score-label">Crypto Space</span>
                     <span class="score-value" id="hardScore">0</span>
                 </div>
             </div>
@@ -149,7 +155,7 @@
     <!-- Level Select Screen -->
     <div id="levelSelectScreen" class="screen level-select-screen hidden">
         <div class="level-header">
-            <button class="back-btn" onclick="showMenu()">
+            <button class="back-btn" onclick="playButtonSound(); showMenu()">
                 <span class="icon-back"></span>
                 Back
             </button>
@@ -157,14 +163,14 @@
         </div>
 
         <div class="levels-container">
-            <div class="level-card easy-level" onclick="startGame('easy')">
+            <div class="level-card easy-level" onclick="playButtonSound(); startGame('easy')">
                 <div class="level-image">
                     <img src="images/kokok-rocket.png" alt="Rocket Ship" style="width: 120px; height: 120px; object-fit: contain;">
                 </div>
                 <div class="level-info">
                     <div class="level-title">
                         <span class="icon-target"></span>
-                        <h3>EASY MODE</h3>
+                        <h3>SKY CITY</h3>
                     </div>
                     <p class="level-description">Geometry Dash style controls</p>
                     <ul class="level-details">
@@ -179,14 +185,14 @@
                 </div>
             </div>
 
-            <div class="level-card hard-level" onclick="startGame('hard')">
+            <div class="level-card hard-level" onclick="playButtonSound(); startGame('hard')">
                 <div class="level-image">
                     <img src="images/kokok-ufo.png" alt="UFO" style="width: 120px; height: 120px; object-fit: contain;">
                 </div>
                 <div class="level-info">
                     <div class="level-title">
                         <span class="icon-zap"></span>
-                        <h3>HARD MODE</h3>
+                        <h3>CRYPTO SPACE</h3>
                     </div>
                     <p class="level-description">Flappy Bird with chaotic asteroids</p>
                     <ul class="level-details">
@@ -210,7 +216,7 @@
     <!-- Customization Screen -->
     <div id="customizationScreen" class="screen customization-screen hidden">
         <div class="customization-header">
-            <button class="back-btn" onclick="showMenu()">
+            <button class="back-btn" onclick="playButtonSound(); showMenu()">
                 <span class="icon-back"></span>
                 Back
             </button>
@@ -219,12 +225,12 @@
 
         <div class="customization-container">
             <div class="vehicles-section ships-section">
-                <h2>SHIPS (Easy Mode)</h2>
+                <h2>SHIPS (Sky City)</h2>
                 <div id="shipsContainer" class="vehicles-grid"></div>
             </div>
 
             <div class="vehicles-section ufos-section">
-                <h2>UFOs (Hard Mode)</h2>
+                <h2>UFOs (Crypto Space)</h2>
                 <div id="ufosContainer" class="vehicles-grid"></div>
             </div>
         </div>
@@ -233,12 +239,12 @@
             <h3>HOW TO UNLOCK</h3>
             <div class="unlock-details">
                 <div class="unlock-item">
-                    <h4>Easy Mode Ships</h4>
-                    <p>Score 10, 25, 50, and 100 points to unlock new ships</p>
+                    <h4>Sky City Ships</h4>
+                    <p>Score 100 and 300 points to unlock new ships</p>
                 </div>
                 <div class="unlock-item">
-                    <h4>Hard Mode UFOs</h4>
-                    <p>Score 10, 25, 50, and 100 points to unlock new UFOs</p>
+                    <h4>Crypto Space UFOs</h4>
+                    <p>Score 50 and 150 points to unlock new UFOs</p>
                 </div>
             </div>
         </div>
@@ -247,7 +253,7 @@
     <!-- Leaderboards Screen -->
     <div id="leaderboardsScreen" class="screen leaderboards-screen hidden">
         <div class="leaderboards-header">
-            <button class="back-btn" onclick="showMenu()">
+            <button class="back-btn" onclick="playButtonSound(); showMenu()">
                 <span class="icon-back"></span>
                 Back
             </button>
@@ -258,7 +264,7 @@
             <div class="leaderboard-section easy-leaderboard">
                 <div class="leaderboard-header">
                     <span class="icon-target"></span>
-                    <h2>EASY MODE TOP 50</h2>
+                    <h2>SKY CITY TOP 50</h2>
                 </div>
                 <div class="leaderboard-stats">
                     <div class="stat-item">
@@ -290,7 +296,7 @@
             <div class="leaderboard-section hard-leaderboard">
                 <div class="leaderboard-header">
                     <span class="icon-zap"></span>
-                    <h2>HARD MODE TOP 50</h2>
+                    <h2>CRYPTO SPACE TOP 50</h2>
                 </div>
                 <div class="leaderboard-stats">
                     <div class="stat-item">
@@ -328,7 +334,7 @@
     <!-- Instructions Screen -->
     <div id="instructionsScreen" class="screen instructions-screen hidden">
         <div class="instructions-header">
-            <button class="back-btn" onclick="showMenu()">
+            <button class="back-btn" onclick="playButtonSound(); showMenu()">
                 <span class="icon-back"></span>
                 Back
             </button>
@@ -339,7 +345,7 @@
             <div class="instruction-card easy-instructions">
                 <div class="instruction-header">
                     <span class="icon-target"></span>
-                    <h2>EASY MODE</h2>
+                    <h2>SKY CITY</h2>
                 </div>
                 <div class="instruction-content">
                     <div class="control-info">
@@ -361,7 +367,7 @@
             <div class="instruction-card hard-instructions">
                 <div class="instruction-header">
                     <span class="icon-zap"></span>
-                    <h2>HARD MODE</h2>
+                    <h2>CRYPTO SPACE</h2>
                 </div>
                 <div class="instruction-content">
                     <div class="control-info">
@@ -410,13 +416,13 @@
     <div id="gameScreen" class="screen game-screen hidden">
         <div class="game-hud">
             <div class="hud-left">
-                <button class="hud-btn" onclick="pauseGame()">
+                <button class="hud-btn" onclick="playButtonSound(); pauseGame()">
                     <span class="icon-back"></span>
                     Menu
                 </button>
                 <div class="level-indicator">
                     <span class="icon-trophy"></span>
-                    <span id="currentLevel">EASY MODE</span>
+                    <span id="currentLevel">SKY CITY</span>
                 </div>
             </div>
             <div class="hud-right">
@@ -424,7 +430,7 @@
                     <div class="score-label">SCORE</div>
                     <div class="score-value" id="gameScore">0</div>
                 </div>
-                <button class="hud-btn" onclick="pauseGame()">
+                <button class="hud-btn" onclick="playButtonSound(); pauseGame()">
                     <span class="icon-pause"></span>
                     Pause
                 </button>
@@ -439,8 +445,8 @@
                 <div class="pause-content">
                     <h2>PAUSED</h2>
                     <div class="pause-buttons">
-                        <button class="pause-btn continue-btn" onclick="resumeGame()">Continue</button>
-                        <button class="pause-btn menu-btn" onclick="showMenu()">Main Menu</button>
+                        <button class="pause-btn continue-btn" onclick="playButtonSound(); resumeGame()">Continue</button>
+                        <button class="pause-btn menu-btn" onclick="playButtonSound(); showMenu()">Main Menu</button>
                     </div>
                 </div>
             </div>
@@ -475,9 +481,9 @@
                         <p>Check customization menu</p>
                     </div>
                     <div class="game-over-buttons">
-                        <button class="game-over-btn play-again-btn" onclick="restartGame()">Play Again</button>
-                        <button class="game-over-btn menu-btn" onclick="showMenu()">Main Menu</button>
-                        <button class="game-over-btn leaderboards-btn" onclick="showLeaderboards()">View Leaderboards</button>
+                        <button class="game-over-btn play-again-btn" onclick="playButtonSound(); restartGame()">Play Again</button>
+                        <button class="game-over-btn menu-btn" onclick="playButtonSound(); showMenu()">Main Menu</button>
+                        <button class="game-over-btn leaderboards-btn" onclick="playButtonSound(); showLeaderboards()">View Leaderboards</button>
                     </div>
                 </div>
             </div>
@@ -492,6 +498,8 @@
     <script src="js/gameState.js"></script>
     <script src="js/vehicles.js"></script>
     <script src="js/gameObjects.js"></script>
+    <script src="js/audioManager.js"></script>
+    <script src="js/audioTestUtil.js"></script>
     <script src="js/login.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/levelSelect.js"></script>

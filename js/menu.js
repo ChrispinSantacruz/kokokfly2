@@ -20,6 +20,11 @@ class MenuManager {
   // Initialize menu
   initialize() {
     this.updateMenu()
+    
+    // Reproducir música del menú
+    if (window.audioManager) {
+      window.audioManager.playMenuMusic()
+    }
   }
 }
 

@@ -19,6 +19,13 @@ class GameEngine {
     this.gameStartTime = 0
     this.previousScore = 0
 
+    // Explosion effect variables
+    this.explosionEffect = null
+    this.explosionImage = null
+    
+    // Precargar imagen de explosión
+    this.loadExplosionImage()
+
     // Game constants - IMPROVED PHYSICS
     this.GRAVITY = 0.4
     this.JUMP_FORCE_EASY = -10 // Stronger jump for easy mode
@@ -34,6 +41,31 @@ class GameEngine {
       this.setupCanvas()
       this.initializeControls()
       this.setupOrientationControl()
+    }
+  }
+
+  loadExplosionImage() {
+    this.explosionImage = new Image()
+    this.explosionImage.onload = () => {
+      console.log('✅ Imagen de explosión cargada: choque1.png')
+    }
+    this.explosionImage.onerror = () => {
+      console.error('❌ Error cargando imagen de explosión: choque1.png')
+    }
+    this.explosionImage.src = 'images/choque1.png'
+  }
+
+  showExplosionAtPlayer() {
+    if (this.player && this.explosionImage) {
+      this.explosionEffect = {
+        x: this.player.x + this.PLAYER_SIZE / 2, // Centro del jugador
+        y: this.player.y + this.PLAYER_SIZE / 2, // Centro del jugador
+        startTime: Date.now(),
+        duration: 1000, // Duración de 1 segundo
+        size: this.PLAYER_SIZE * 2, // Tamaño de la explosión
+        opacity: 1
+      }
+      console.log('💥 Explosión mostrada en posición del jugador:', this.explosionEffect.x, this.explosionEffect.y)
     }
   }
 
@@ -240,10 +272,24 @@ class GameEngine {
       if (this.level === "easy") {
         // Easy mode: Hold to rise
         this.player.isHolding = isPressed
+        
+        // Sonido de nave para nivel fácil
+        if (window.audioManager) {
+          if (isPressed) {
+            window.audioManager.playNaveSound()
+          } else {
+            window.audioManager.stopNaveSound()
+          }
+        }
       } else {
         // Hard mode: UFO tap to boost - IMPROVED
         if (isPressed) {
           this.player.velocityY = -4.5 // Stronger boost for UFO
+          
+          // Sonido de burbuja para nivel hard
+          if (window.audioManager) {
+            window.audioManager.playBubbleSound()
+          }
         }
       }
     }
@@ -320,7 +366,7 @@ class GameEngine {
     const gameScoreElement = document.getElementById("gameScore")
 
     if (currentLevelElement) {
-      currentLevelElement.textContent = level.toUpperCase() + " MODE"
+      currentLevelElement.textContent = level === "easy" ? "SKY CITY" : "CRYPTO SPACE"
     }
     if (gameScoreElement) {
       gameScoreElement.textContent = "0"
@@ -338,6 +384,12 @@ class GameEngine {
 
     // Start game loop
     this.lastObstacleTime = 0
+    
+    // Reproducir música del nivel
+    if (window.audioManager) {
+      window.audioManager.playLevelMusic(level)
+    }
+    
     this.gameLoop()
   }
 
@@ -372,6 +424,12 @@ class GameEngine {
     // Check for level completion (300 points in easy mode)
     if (this.level === "easy" && this.score >= 300 && !this.levelCompleted) {
       this.levelCompleted = true
+      
+      // Reproducir sonido de meta
+      if (window.audioManager) {
+        window.audioManager.playMetaSound()
+      }
+      
       this.showLevelCompleteScreen()
       return
     }
@@ -393,6 +451,9 @@ class GameEngine {
 
     // Update particles (limit particle count for performance)
     this.updateParticles()
+
+    // Update explosion effect
+    this.updateExplosionEffect()
 
     // Check collisions
     this.checkCollisions()
@@ -1338,6 +1399,24 @@ class GameEngine {
     }
   }
 
+  updateExplosionEffect() {
+    if (this.explosionEffect) {
+      const elapsed = Date.now() - this.explosionEffect.startTime
+      
+      if (elapsed >= this.explosionEffect.duration) {
+        // Eliminar explosión cuando termine
+        this.explosionEffect = null
+      } else {
+        // Actualizar opacidad (fade out)
+        const progress = elapsed / this.explosionEffect.duration
+        this.explosionEffect.opacity = 1 - progress
+        
+        // Opcional: hacer que la explosión crezca ligeramente
+        this.explosionEffect.size = this.PLAYER_SIZE * 2 * (1 + progress * 0.5)
+      }
+    }
+  }
+
   checkCollisions() {
     // Grace period - no collisions for first 2 seconds in hard mode
     if (this.level === "hard" && Date.now() - this.gameStartTime < 2000) {
@@ -1365,6 +1444,15 @@ class GameEngine {
           return
         } else {
           // Sin escudo: game over normal (solo para edificios y asteroides peligrosos)
+          
+          // Mostrar explosión exactamente en la posición del jugador
+          this.showExplosionAtPlayer()
+          
+          // Reproducir sonido de explosión
+          if (window.audioManager) {
+            window.audioManager.playExplosionSound()
+          }
+          
           this.gameOver()
           return
         }
@@ -1457,6 +1545,24 @@ class GameEngine {
         particle.render(this.ctx)
       }
     })
+
+    // Draw explosion effect on top of everything
+    if (this.explosionEffect && this.explosionImage) {
+      this.ctx.save()
+      this.ctx.globalAlpha = this.explosionEffect.opacity
+      
+      // Dibujar la imagen de explosión centrada en la posición
+      const halfSize = this.explosionEffect.size / 2
+      this.ctx.drawImage(
+        this.explosionImage,
+        this.explosionEffect.x - halfSize,
+        this.explosionEffect.y - halfSize,
+        this.explosionEffect.size,
+        this.explosionEffect.size
+      )
+      
+      this.ctx.restore()
+    }
 
     // Draw UI
     this.drawUI()
@@ -1593,7 +1699,7 @@ class GameEngine {
     // Instructions
     this.ctx.fillStyle = "#ffff00"
     this.ctx.font = "20px Orbitron"
-    this.ctx.fillText("Get ready for HARD MODE!", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 60)
+    this.ctx.fillText("Get ready for CRYPTO SPACE!", this.GAME_WIDTH / 2, this.GAME_HEIGHT / 2 + 60)
     
     this.ctx.fillStyle = "#ffffff"
     this.ctx.font = "16px Orbitron"
@@ -1613,10 +1719,20 @@ class GameEngine {
         // 🔄 VOLVER A ORIENTACIÓN VERTICAL AL PAUSAR
         this.forceVerticalOrientation()
         pauseOverlay.classList.remove("hidden")
+        
+        // Pausar audio
+        if (window.audioManager) {
+          window.audioManager.pauseAllAudio()
+        }
       } else {
         // 🔄 VOLVER A ORIENTACIÓN HORIZONTAL AL RESUMIR
         this.forceHorizontalOrientation()
         pauseOverlay.classList.add("hidden")
+        
+        // Reanudar audio
+        if (window.audioManager) {
+          window.audioManager.resumeAllAudio()
+        }
       }
     }
   }
@@ -1626,6 +1742,11 @@ class GameEngine {
 
     // 🔄 VOLVER A ORIENTACIÓN VERTICAL EN MÓVILES
     this.forceVerticalOrientation()
+
+    // Reproducir sonido de game over
+    if (window.audioManager) {
+      window.audioManager.playGameOverSound()
+    }
 
     // Update high scores and check for unlocks
     const unlocks = window.gameState.updateScore(this.score, this.level)
@@ -1744,7 +1865,7 @@ class GameEngine {
     document.addEventListener('keydown', continueHandler)
     this.canvas.addEventListener('click', continueHandler)
     
-    console.log('Level completed! Press SPACE or CLICK to continue to Hard mode')
+            console.log('Level completed! Press SPACE or CLICK to continue to Crypto Space')
   }
 }
 
