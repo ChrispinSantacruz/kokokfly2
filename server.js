@@ -3,6 +3,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const https = require('https');
 const mongoose = require('mongoose');
 const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
@@ -20,6 +21,9 @@ const PORT = process.env.PORT || 3000;
 // Configuración MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kokokfly';
 let isMongoConnected = false;
+
+// Configuración del backend de Render
+const RENDER_BACKEND_URL = process.env.RENDER_BACKEND_URL || 'https://kokokfly2.onrender.com';
 
 // Conectar a MongoDB
 async function connectMongoDB() {
@@ -101,35 +105,81 @@ function getLocalIP() {
   return 'localhost';
 }
 
+// Función para hacer llamadas HTTP al backend de Render
+function makeHttpRequest(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = '';
+      
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      
+      res.on('end', () => {
+        try {
+          const jsonData = JSON.parse(data);
+          resolve(jsonData);
+        } catch (error) {
+          reject(new Error(`Error parsing JSON: ${error.message}`));
+        }
+      });
+    }).on('error', (error) => {
+      reject(error);
+    });
+  });
+}
+
 // Función para obtener leaderboards para el bot
 async function getLeaderboardsForBot() {
   try {
     let leaderboards;
     
-    if (isMongoConnected) {
-      // Usar MongoDB
-      leaderboards = await Score.getLeaderboards();
-    } else {
-      // Fallback a archivo JSON
-      const scores = readScores();
+    // Prioridad 1: Intentar obtener datos del backend de Render
+    try {
+      console.log('🌐 Trying to fetch leaderboards from Render backend...');
+      const response = await makeHttpRequest(`${RENDER_BACKEND_URL}/api/leaderboards`);
       
-      const easyTop = scores.easy
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 10);
-      
-      const hardTop = scores.hard
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 10);
-      
-      leaderboards = {
-        easy: easyTop,
-        hard: hardTop
-      };
+      if (response.success && response.data) {
+        leaderboards = response.data;
+        console.log('✅ Leaderboards fetched from Render backend');
+        return leaderboards;
+      } else {
+        console.log('⚠️  Invalid response from Render backend');
+      }
+    } catch (renderError) {
+      console.log('❌ Error fetching from Render backend:', renderError.message);
     }
     
+    // Prioridad 2: Usar MongoDB local si está disponible
+    if (isMongoConnected) {
+      console.log('📊 Trying to fetch leaderboards from local MongoDB...');
+      leaderboards = await Score.getLeaderboards();
+      console.log('✅ Leaderboards fetched from local MongoDB');
+      return leaderboards;
+    }
+    
+    // Prioridad 3: Fallback a archivo JSON local
+    console.log('📁 Using local JSON file as fallback...');
+    const scores = readScores();
+    
+    const easyTop = scores.easy
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    
+    const hardTop = scores.hard
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    
+    leaderboards = {
+      easy: easyTop,
+      hard: hardTop
+    };
+    
+    console.log('✅ Leaderboards fetched from local JSON file');
     return leaderboards;
+    
   } catch (error) {
-    console.error('Error getting leaderboards for bot:', error);
+    console.error('❌ Error getting leaderboards for bot:', error);
     return { easy: [], hard: [] };
   }
 }
@@ -213,10 +263,16 @@ bot.onText(/\/leaderboards/, async (msg) => {
   
   try {
     // Enviar mensaje de "cargando"
-    await bot.sendMessage(chatId, "🔄 Loading champions data... Please wait! ⏳");
+    await bot.sendMessage(chatId, "🔄 Loading champions data from Render backend... Please wait! ⏳");
     
     // Obtener leaderboards
     const leaderboards = await getLeaderboardsForBot();
+    
+    // Log para debugging
+    console.log('🤖 Bot fetched leaderboards:', {
+      skyCity: leaderboards.easy?.length || 0,
+      cryptoSpace: leaderboards.hard?.length || 0
+    });
     
     // Formatear mensaje
     const message = formatLeaderboardMessage(leaderboards);

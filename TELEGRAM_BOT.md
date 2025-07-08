@@ -8,6 +8,8 @@ Get real-time leaderboards and game stats directly in Telegram!
 - **Dual Mode Support**: See champions from both Sky City and Crypto Space
 - **Beautiful Formatting**: Clean display with emojis and rankings
 - **Always Updated**: Connects directly to the game's live database
+- **Remote Backend**: Fetches data from Render backend for real-time updates
+- **Smart Fallbacks**: Render backend → MongoDB → JSON file priority system
 
 ## 📱 Bot Commands
 
