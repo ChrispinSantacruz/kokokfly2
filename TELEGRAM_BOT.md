@@ -61,13 +61,23 @@ Displays top 10 champions from both game modes with epic celebration image
    - Set environment variable: `TELEGRAM_TOKEN=your_bot_token`
    - Or update the hardcoded token in server.js
 
-3. **Start Server**
+3. **Configure Render Backend (Optional)**
+   - Set environment variable: `RENDER_BACKEND_URL=https://kokokfly2.onrender.com`
+   - Or update the hardcoded URL in server.js
+
+4. **Test Backend Connection**
+   ```bash
+   npm run test-render
+   ```
+
+5. **Start Server**
    ```bash
    npm start
    ```
 
-4. **Verify Bot**
+6. **Verify Bot**
    - Check console for "Telegram Bot: ✅ Active"
+   - Look for "✅ Leaderboards fetched from Render backend"
    - Send `/start` to your bot to test
 
 ## 🎮 User Experience
@@ -159,6 +169,15 @@ If you encounter `PHOTO_INVALID_DIMENSIONS` errors:
 ```bash
 TELEGRAM_TOKEN=your_bot_token_here
 MONGODB_URI=your_mongodb_connection_string
+RENDER_BACKEND_URL=https://kokokfly2.onrender.com
+```
+
+### Available Scripts
+```bash
+npm start           # Start the server with bot
+npm run test-render # Test connection to Render backend
+npm run check-image # Check bot image compatibility
+npm run optimize-image # Optimize bot image for Telegram
 ```
 
 ## 📞 Support
