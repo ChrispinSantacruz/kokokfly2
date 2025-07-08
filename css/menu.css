@@ -73,6 +73,45 @@
   animation: slideInLeft 0.6s ease-out 0.6s both;
 }
 
+.btn-fullscreen {
+  position: fixed !important;
+  top: 1vh !important;
+  right: 1vw !important;
+  left: unset !important;
+  transform: none !important;
+  width: auto !important;
+  min-width: 10rem !important;
+  max-width: 12rem !important;
+  z-index: 9999 !important;
+  animation: fadeIn 0.6s ease-out 0.5s both;
+  display: none; /* Oculto por defecto, se mostrará en modo responsive horizontal */
+}
+
+/* 📱 FORZAR VISIBILIDAD Y POSICIÓN CUANDO SE MUESTRA VIA JAVASCRIPT */
+.btn-fullscreen[style*="display: block"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: fixed !important;
+  top: 1vh !important;
+  right: 1vw !important;
+  left: unset !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+/* 📱 REGLA ESPECÍFICA PARA MENU SCREEN */
+#menuScreen .btn-fullscreen,
+.menu-screen .btn-fullscreen {
+  position: fixed !important;
+  top: 1vh !important;
+  right: 1vw !important;
+  left: unset !important;
+  transform: none !important;
+  margin-left: unset !important;
+  margin-right: 0 !important;
+}
+
 .menu-btn {
   width: 100%;
   height: clamp(6vh, 8vh, 10vh); /* Responsive height */
@@ -151,6 +190,23 @@
 .btn-leaderboards-style:hover {
   transform: scale(1.05);
   filter: brightness(1.1) drop-shadow(0 0 1vh rgba(34, 197, 94, 0.3));
+}
+
+.btn-fullscreen-style {
+  background: linear-gradient(45deg, var(--primary-purple), var(--primary-cyan));
+  border: 2px solid var(--primary-yellow);
+  border-radius: 0.5rem;
+  color: var(--primary-yellow);
+  font-weight: 700;
+  text-shadow: 0 0 0.5vh rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover sutil e invisible */
+.btn-fullscreen-style:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1) drop-shadow(0 0 1vh rgba(251, 191, 36, 0.3));
+  background: linear-gradient(45deg, var(--primary-cyan), var(--primary-purple));
 }
 
 .stats-container {
@@ -525,4 +581,18 @@
   will-change: transform, filter;
   backface-visibility: hidden;
   perspective: 1000px;
+}
+
+/* 📱 MOSTRAR BOTÓN DE FULLSCREEN EN MODO LANDSCAPE */
+@media screen and (orientation: landscape) and (max-height: 700px) {
+  .btn-fullscreen {
+    display: block !important;
+  }
+}
+
+/* 📱 RESPALDO: Media query adicional para pantallas horizontales */
+@media screen and (max-height: 700px) and (min-width: 400px) {
+  .btn-fullscreen {
+    display: block !important;
+  }
 }
