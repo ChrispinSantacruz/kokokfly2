@@ -26,7 +26,7 @@ class GameEngine {
     // Precargar imagen de explosión
     this.loadExplosionImage()
 
-    // Game constants - IMPROVED PHYSICS
+    // Game constants - IMPROVED PHYSICS (will be adjusted in startGame for responsive)
     this.GRAVITY = 0.4
     this.JUMP_FORCE_EASY = -10 // Stronger jump for easy mode
     this.JUMP_FORCE_HARD = -12 // Much stronger jump for hard mode (UFO)
@@ -307,9 +307,38 @@ class GameEngine {
     this.gameStarted = false // Game doesn't start until user presses a key
     this.gameStartTime = Date.now()
     this.score = 0
-    this.baseGameSpeed = level === "easy" ? 7.5 : 5.5
+    
+    // 🎯 AJUSTAR VELOCIDADES PARA MODO HORIZONTAL RESPONSIVE
+    const isLandscape = window.innerHeight <= 600 && window.innerWidth > window.innerHeight
+    const isMobile = window.innerWidth <= 767
+    
+    if (isLandscape && isMobile) {
+      // Velocidades reducidas para modo horizontal responsive
+      this.baseGameSpeed = level === "easy" ? 5.0 : 3.8  // Reducido de 7.5/5.5 a 5.0/3.8
+      this.maxGameSpeed = level === "easy" ? 12 : 12     // Reducido de 16 a 12
+      
+      // Ajustar física para que se sienta más pesado en horizontal
+      this.GRAVITY = 0.6                                  // Aumentado de 0.4 a 0.6 (más gravedad)
+      this.JUMP_FORCE_EASY = -8                          // Reducido de -10 a -8 (menos impulso)
+      this.JUMP_FORCE_HARD = -10                         // Reducido de -12 a -10 (menos impulso)
+      this.RISE_FORCE = -0.4                             // Reducido de -0.5 a -0.4 (menor fuerza de subida)
+      
+      console.log('🔄 Velocidades y física ajustadas para modo horizontal responsive')
+      console.log('  - Velocidad base:', this.baseGameSpeed)
+      console.log('  - Gravedad:', this.GRAVITY)
+    } else {
+      // Velocidades normales para desktop y móvil vertical
+      this.baseGameSpeed = level === "easy" ? 7.5 : 5.5
+      this.maxGameSpeed = level === "easy" ? 16 : 16
+      
+      // Física normal
+      this.GRAVITY = 0.4
+      this.JUMP_FORCE_EASY = -10
+      this.JUMP_FORCE_HARD = -12
+      this.RISE_FORCE = -0.5
+    }
+    
     this.gameSpeed = this.baseGameSpeed
-    this.maxGameSpeed = level === "easy" ? 16 : 16
     this.obstacles = []
     this.particles = []
     this.lastGapPosition = "middle"
@@ -1743,8 +1772,9 @@ class GameEngine {
     // 🔄 VOLVER A ORIENTACIÓN VERTICAL EN MÓVILES
     this.forceVerticalOrientation()
 
-    // Reproducir sonido de game over
+    // Detener música de fondo del nivel antes de reproducir sonido de game over
     if (window.audioManager) {
+      window.audioManager.stopAllBackgroundMusic()
       window.audioManager.playGameOverSound()
     }
 
