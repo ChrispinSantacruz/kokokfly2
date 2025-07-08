@@ -31,9 +31,14 @@ Displays top 10 champions from both game modes with epic celebration image
 
 ### Integration
 - **Server Integration**: Built into the main game server (server.js)
-- **Database Connection**: Uses the same MongoDB/JSON storage as the game
+- **Remote Backend**: Connects to Render backend (https://kokokfly2.onrender.com)
+- **Database Connection**: Uses MongoDB from Render backend with local fallbacks
 - **Real-time Updates**: Fetches fresh data with each command
-- **Error Handling**: Graceful fallback for network issues
+- **Error Handling**: Smart fallback system (Render → MongoDB → JSON)
+- **Data Priority**: 
+  1. Render backend API (`/api/leaderboards`)
+  2. Local MongoDB connection
+  3. Local JSON file fallback
 
 ### Bot Configuration
 - **Token**: Configured via environment variable or hardcoded
