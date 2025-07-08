@@ -13,8 +13,8 @@ class MenuManager {
     this.welcomeNameElement.textContent = window.gameState.playerName
     this.easyScoreElement.textContent = window.gameState.easyHighScore
     this.hardScoreElement.textContent = window.gameState.hardHighScore
-    this.shipsCountElement.textContent = `${window.gameState.unlockedShips.length}/5`
-    this.ufosCountElement.textContent = `${window.gameState.unlockedUfos.length}/5`
+    this.shipsCountElement.textContent = `${window.gameState.unlockedShips.length}/3`
+    this.ufosCountElement.textContent = `${window.gameState.unlockedUfos.length}/3`
   }
 
   // Initialize menu

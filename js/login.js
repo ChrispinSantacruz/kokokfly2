@@ -47,8 +47,8 @@ class LoginManager {
       console.log(`Welcome back, ${name}!`)
       console.log(`Easy High Score: ${window.gameState.easyHighScore}`)
       console.log(`Hard High Score: ${window.gameState.hardHighScore}`)
-      console.log(`Ships Unlocked: ${window.gameState.unlockedShips.length}/5`)
-      console.log(`UFOs Unlocked: ${window.gameState.unlockedUfos.length}/5`)
+          console.log(`Ships Unlocked: ${window.gameState.unlockedShips.length}/3`)
+    console.log(`UFOs Unlocked: ${window.gameState.unlockedUfos.length}/3`)
     } else {
       console.log(`Welcome new player, ${name}!`)
     }
@@ -123,7 +123,7 @@ class LoginManager {
         <div class="player-stats">
           Easy: <span>${playerData.easyHighScore}</span><br>
           Hard: <span>${playerData.hardHighScore}</span><br>
-          Ships: <span>${playerData.unlockedShips.length}/5</span>
+          Ships: <span>${playerData.unlockedShips.length}/3</span>
         </div>
       `
       
